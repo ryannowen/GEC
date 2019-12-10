@@ -30,12 +30,15 @@ bool Sprite::AlphaBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<flo
 	texturePointer += (static_cast<size_t>(spriteBounds.top) * spriteDimensions.x + static_cast<int>(spriteBounds.left)) * 4;
 
 	int alpha{ 0 };
-	int screenNextLineOffset{ (argScreen.Width() - spriteBounds.Width()) * 4 };
-	int textureNextLineOffset{ (spriteDimensions.x - spriteBounds.Width()) * 4 };
+	const int screenNextLineOffset{ (argScreen.Width() - spriteBounds.Width()) * 4 };
+	const int textureNextLineOffset{ (spriteDimensions.x - spriteBounds.Width()) * 4 };
 
-	for (int y = 0; y < spriteBounds.Height(); y++)
+	const int boundsHeight{ spriteBounds.Height() };
+	const int boundsWidth{ spriteBounds.Width() };
+
+	for (int y = 0; y < boundsHeight; y++)
 	{
-		for (int x = 0; x < spriteBounds.Width(); x++)
+		for (int x = 0; x < boundsWidth; x++)
 		{
 			if (texturePointer[3] == 255) /// Full alpha = Copy full pixel
 				memcpy(argScreenPointer, texturePointer, 4);

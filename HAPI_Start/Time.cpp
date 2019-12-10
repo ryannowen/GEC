@@ -1,6 +1,6 @@
 #include "Time.h"
 
-Time* Time::time{ nullptr };
+std::shared_ptr<Time> Time::time{ nullptr };
 
 /// Calculates Deleta time, Updates Elapsed time and progresses timers
 void Time::Update()
@@ -16,20 +16,4 @@ void Time::Update()
 		hasTicked = true;
 	}
 }
-
-void Time::DeleteInstance()
-{
-	delete time;
-}
-
-Time& Time::GetTime()
-{
-	if (time == nullptr)
-	{
-		time = new Time();
-	}
-
-	return *time;
-}
-
 

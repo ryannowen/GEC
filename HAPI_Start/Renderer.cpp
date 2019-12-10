@@ -2,11 +2,20 @@
 
 #include "Sprite.h"
 
-Renderer::Renderer(const Vector2<int> argScreenDimensions, const std::string& argWindowName)
-	: screenDimensions(argScreenDimensions)
+std::shared_ptr<Renderer> Renderer::renderer{ nullptr };
+
+Renderer::Renderer()
 {
-	if (!HAPI.Initialise(screenDimensions.x, screenDimensions.y, argWindowName))
-		return;
+
+}
+
+void Renderer::CreateWindow(const Vector2<int> argScreenDimensions, const std::string& argWindowName)
+{
+	int w{ 1600 }, h{ 900 };
+
+	if (!HAPI.Initialise(w, h, "Test")) return;
+
+	screenDimensions = argScreenDimensions;
 
 	screenPointer = HAPI.GetScreenPointer();
 	screenBounds.UpdateDimensions(screenDimensions.x, screenDimensions.y);
@@ -37,7 +46,7 @@ void Renderer::ClearScreen(const HAPI_TColour argScreenColour)
 
 		int bytes{ 4 };
 		bool completed{ false };
-		int halfScreenBytes{ (screenDimensions.x * screenDimensions.y * 2) };
+		const int halfScreenBytes{ (screenDimensions.x * screenDimensions.y * 2) };
 
 		while (!completed)
 		{

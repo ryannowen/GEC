@@ -21,7 +21,7 @@ private:
 
 	Time() = default;
 
-	static Time* time;
+	static std::shared_ptr<Time> time;
 
 public:
 	void Update();
@@ -41,9 +41,15 @@ public:
 
 	float CalculateInterp() { return static_cast<float>(currentTime - elapsedTime) / tickLength; };
 
-	void DeleteInstance();
+	static std::shared_ptr<Time>& GetInstance()
+	{
+		if (time == nullptr)
+		{
+			time.reset(new Time());
+		}
 
-	static Time& GetTime();
+		return time;
+	}
 };
 
-#define TIME Time::GetTime()
+#define TIME Time::GetInstance()

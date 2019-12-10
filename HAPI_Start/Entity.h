@@ -24,7 +24,7 @@ public:
 	Entity(Vector2<float> argPosition, std::string argTexturePath);
 	virtual void Update() = 0;
 
-	bool CreateSprite(std::shared_ptr<Renderer>& argRenderer, bool argHasAlpha, Vector2<int> argNumOfSpriteCells);
-	void Draw(std::shared_ptr<Renderer>& argRenderer, const float argInterp);
+	bool CreateSprite(bool argHasAlpha, Vector2<int> argNumOfSpriteCells);
+	void Draw(const float argInterp);
 };
 

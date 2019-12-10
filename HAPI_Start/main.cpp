@@ -27,6 +27,7 @@
 /// My headers
 #include "Vector2.h"
 #include "World.h"
+#include "Renderer.h"
 
 /// HAPI itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
@@ -35,9 +36,6 @@ using namespace HAPISPACE;
 /// When this function exits the program will close down
 void HAPI_Main()
 {
-	/// Creates world for game (Including screen)
-	std::shared_ptr<World> gameWorld = std::make_shared<World>(Vector2<int>(1600, 900), "HAPI");
-
 	// Debug FPS
 	HAPI.SetShowFPS(true);
 	//HAPI.LimitFrameRate(5);
@@ -45,7 +43,8 @@ void HAPI_Main()
 	/// Seeds PRNG
 	std::srand(static_cast<unsigned int>(time(0)));
 
+
 	/// Initial Update to begin game loop
-	gameWorld->Update();
+	WORLD->Update();
 }
 

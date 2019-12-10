@@ -17,14 +17,25 @@ class Entity;
 class World
 {
 private:
-	std::shared_ptr<Renderer> window;
+	World();
+
 	std::unordered_map<std::string, std::shared_ptr<Entity>> entities;
 
-
+	static std::shared_ptr<World> world;
 
 public:
-	World(const Vector2<int> argScreenDimensions, const std::string& argScreenName);
-	~World();
+
+	//static void CreateInstance(const Vector2<int> argScreenDimensions, const std::string& argScreenName);
+	static std::shared_ptr<World>& GetInstance()
+	{
+		if (world == nullptr) {
+
+			world.reset(new World());
+
+		}
+		return world;
+	}
+
 	void Update();
 
 	void SpawnEntity(const std::string& argName, std::shared_ptr<Entity>& argEntity, const bool argHasAlpha, Vector2<int> argNumOfSpriteCells);
@@ -33,3 +44,4 @@ public:
 	bool LoadLevel(const std::string& argLevelName = std::string());
 };
 
+#define WORLD World::GetInstance()

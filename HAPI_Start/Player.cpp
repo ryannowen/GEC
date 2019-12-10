@@ -13,7 +13,7 @@ void Player::Update()
 {
 	Vector2<float> playerDir{ playerController.GetMovementDirection() };
 
-	Translate((playerDir * playerSpeed) * TIME.GetTickTimeSeconds());
+	Translate((playerDir * playerSpeed) * TIME->GetTickTimeSeconds());
 
 	if (HAPI.GetKeyboardData().scanCode['D'])
 		currentSpriteCells.x++;

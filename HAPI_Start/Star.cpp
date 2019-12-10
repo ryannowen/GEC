@@ -30,7 +30,7 @@ void Star::RandomisePosition(const int argScreenWidth, const int argScreenHeight
 /// Translates to star towards camera dependant with accelaration
 void Star::Translate(const int argScreenWidth, const int argScreenHeight, const float argSpeedModifier)
 {
-	z -= ((0.1f * translateSpeed) * argSpeedModifier) * TIME.GetDeltaTimeMiliseconds();
+	z -= ((0.1f * translateSpeed) * argSpeedModifier) * TIME->GetDeltaTimeMiliseconds();
 	translateSpeed += 0.1f;
 
 	if (z <= 0)
@@ -43,7 +43,7 @@ void Star::Translate(const int argScreenWidth, const int argScreenHeight, const 
 /// Rotates around given point
 void Star::Rotate(const int argPointX, const int argPointY, const float argAngle, const float argSpeedModifier)
 {
-	float rotateAngle{ ((argAngle / z) * argSpeedModifier) * TIME.GetDeltaTimeMiliseconds() };
+	float rotateAngle{ ((argAngle / z) * argSpeedModifier) * TIME->GetDeltaTimeMiliseconds() };
 	float cosfAngle{ cosf(rotateAngle) }, sinfAngle{ sinf(rotateAngle) };
 
 	x = ((cosfAngle * (x - argPointX)) - (sinfAngle * (y - argPointY))) + argPointX;

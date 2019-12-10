@@ -8,26 +8,24 @@
 
 #include "Player.h"
 
-World::World(const Vector2<int> argScreenDimensions, const std::string& argScreenName)
-{
-	window = std::make_shared<Renderer>(argScreenDimensions, argScreenName);
+std::shared_ptr<World> World::world{ nullptr };
 
-	// Temporary level loading;
+World::World()
+{
+	RENDERER->CreateWindow(Vector2<int>(1600, 900), "Test");
+
 	LoadLevel();
-}
-
-World::~World()
-{
-	TIME.DeleteInstance();
 }
 
 void World::Update()
 {
 	/// HAPI Update Loop
 
+
+
 	while (HAPI.Update())
 	{
-		TIME.Update();
+		TIME->Update();
 
 		/// Checks if enough time has passed to allow for a world tick
 		/*if (currentTime - TIME.GetElapsedTimeMiliseconds() > tickLength)
@@ -41,18 +39,21 @@ void World::Update()
 		//std::cout << "Time Elapsed = " << Time::GetDeltaTimeMiliseconds() << " Milliseconds" << std::endl;
 
 		/// Clears screen to black
-		window->ClearScreen(HAPI_TColour::BLACK);
+		RENDERER->ClearScreen(HAPI_TColour::BLACK);
 
-		bool tick{ TIME.GetHasTicked() };
+		const bool tick{ TIME->GetHasTicked() };
 		for (auto& entity : entities)
 		{
 			if (tick)
 			{
 				entity.second->Update();
+
+
+
 			}
 
 
-			float interp{ TIME.CalculateInterp() };
+			float interp{ TIME->CalculateInterp() };
 
 			/// Clamps Interpolation between 0 and 1 for scaling purposes
 			if (interp > 1)
@@ -89,7 +90,7 @@ void World::SpawnEntity(const std::string& argName, std::shared_ptr<Entity>& arg
 		return;
 	}
 
-	if (argEntity->CreateSprite(window, argHasAlpha, argNumOfSpriteCells))
+	if (argEntity->CreateSprite(argHasAlpha, argNumOfSpriteCells))
 	{
 		entities[argName] = argEntity;
 	}
@@ -106,7 +107,7 @@ void World::DrawEntity(const std::string& argName, const float argInterp)
 		return;
 	}
 
-	entities.at(argName)->Draw(window, argInterp);
+	entities.at(argName)->Draw(argInterp);
 }
 
 bool World::LoadLevel(const std::string& argLevelName)
