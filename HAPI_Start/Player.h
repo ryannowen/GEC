@@ -1,28 +1,31 @@
 #pragma once
 #include "Entity.h"
 
-#include "Controller.h"
 
 class Player : public Entity
 {
 protected:
-	Controller playerController;
+	static unsigned int numOfPlayers;
+	unsigned int playerID{ 0 };
 
-	Vector2<float> acceleration{ 0.0f, 0.0f };
-	Vector2<float> velocity{ 0.0f, 0.0f };
+	float attackDelay{ 0 };
+	float attackChargeTime{ 2 };
+	bool attackReady{ true };
 
-	Vector2<float> playerSpeed{ 1600.0f, 900.0f };
-	float maxSpeed{ 0.45f };
-	float drag{ 0.002f };
+	virtual void OnAnimFinished() override final;
+	virtual void ApplyPhysics() override final;
 
+
+	Vector2<int> previousOffset{ -5, 1 }; // TODO Remove
+	int spawnedAmount{ 0 };
 public:
-	Player(Vector2<float> argPosition, std::string argTexturePath, std::vector<int>& argKeyboardMovementKeys, std::vector<int>& argControllerMovementKeys);
+	Vector2<unsigned int> cellLoc{ 0, 0 }; // TODO Remove
+
+	Player(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds, const std::vector<int>& argKeyboardMovementKeys, const std::vector<int>& argControllerMovementKeys);
 	void Update() override;
 
-	void AddVelocity(Vector2<float> argVelocity);
-	void AddAcceleration(Vector2<float> argAcceleration);
+	bool CanAttack() const { return (attackReady && GetActive()); };
+	bool Attack();
 
-	void SetVelocity(Vector2<float> argVelocity);
-	void SetAcceleration(Vector2<float> argAcceleration);
 };
 

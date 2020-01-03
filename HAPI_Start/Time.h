@@ -41,14 +41,14 @@ public:
 
 	float CalculateInterp() { return static_cast<float>(currentTime - elapsedTime) / tickLength; };
 
-	static std::shared_ptr<Time>& GetInstance()
+	static Time& GetInstance()
 	{
 		if (time == nullptr)
 		{
 			time.reset(new Time());
 		}
 
-		return time;
+		return *time;
 	}
 };
 

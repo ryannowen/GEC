@@ -45,6 +45,6 @@ void HAPI_Main()
 
 
 	/// Initial Update to begin game loop
-	WORLD->Update();
+	WORLD.Update();
 }
 

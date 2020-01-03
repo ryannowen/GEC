@@ -12,10 +12,15 @@ public:
 
 	void Normalise()
 	{
-		float unitVector = sqrt((x * x) + (y * y));
+		float dot = sqrt(Dot());
 
-		if(unitVector != 0)
-			*this /= unitVector;
+		if(dot != 0)
+			*this /= dot;
+	}
+
+	float Dot() const
+	{
+		return (x * x) + (y * y);
 	}
 
 	// *= vec2

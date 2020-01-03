@@ -27,22 +27,22 @@ private:
 
 	std::unordered_map<std::string, std::shared_ptr<Sprite>> spriteMap;
 public:
-	static std::shared_ptr<Renderer>& GetInstance()
+	static Renderer& GetInstance()
 	{
 		if (!renderer)
 		{
 			renderer.reset(new Renderer());
 		}
 
-		return renderer;
+		return *renderer;
 	}
 
-	void CreateWindow(const Vector2<int> argScreenDimensions = Vector2<int>(1600, 900), const std::string& argWindowName = "Unknown Name");
+	void CreateWindow(Vector2<int> argScreenDimensions = Vector2<int>(1600, 900), const std::string& argWindowName = "Unknown Name");
 
 	bool CreateSprite(const std::string& argSpritePath, const bool argHasAlpha, Vector2<int> argNumOfSpriteCells);
 
 	void ClearScreen(const HAPI_TColour argColour);
-	void DrawSprite(const std::string& argSpritePath, const Vector2<float> argPosition, Vector2<int>& argCurrentCells);
+	void DrawSprite(const std::string& argSpritePath, const Vector2<float> argPosition, Vector2<unsigned int>& argCurrentCells);
 };
 
 #define RENDERER Renderer::GetInstance()

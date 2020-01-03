@@ -34,7 +34,7 @@ void Rectangle::ClipTo(const Rectangle& argRect)
 
 bool Rectangle::CompletelyContains(const Rectangle& argRect) const
 {
-	if (left > argRect.left && right < argRect.right && top > argRect.top && bottom < argRect.bottom)
+	if ((left > argRect.left && right < argRect.right) && (top > argRect.top && bottom < argRect.bottom))
 		return true;
 
 	return false;
@@ -42,22 +42,16 @@ bool Rectangle::CompletelyContains(const Rectangle& argRect) const
 
 bool Rectangle::CompletelyOutside(const Rectangle& argRect) const
 {
-	if (left < argRect.left && right > argRect.right && top < argRect.top && bottom > argRect.bottom)
+	if ((left < argRect.left && right > argRect.right) && (top < argRect.top && bottom > argRect.bottom))
 		return true;
 
 	return false;
 }
 
 bool Rectangle::Contains(const Rectangle& argRect) const
-{
-	if (bottom < argRect.bottom && bottom > argRect.top)
+{	
+	if ((right < argRect.left || left > argRect.right) || (bottom < argRect.top || top > argRect.bottom))
+		return false;
+	else
 		return true;
-	else if (left > argRect.left && left < argRect.right)
-		return true;
-	else if (right < argRect.right && right > argRect.left)
-		return true;
-	else if (top > argRect.top && top < argRect.bottom)
-		return true;
-
-	return false;
 }

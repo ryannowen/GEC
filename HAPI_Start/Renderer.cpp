@@ -9,11 +9,10 @@ Renderer::Renderer()
 
 }
 
-void Renderer::CreateWindow(const Vector2<int> argScreenDimensions, const std::string& argWindowName)
+void Renderer::CreateWindow(Vector2<int> argScreenDimensions, const std::string& argWindowName)
 {
-	int w{ 1600 }, h{ 900 };
-
-	if (!HAPI.Initialise(w, h, "Test")) return;
+	if (!HAPI.Initialise(argScreenDimensions.x, argScreenDimensions.y, argWindowName))
+		return;
 
 	screenDimensions = argScreenDimensions;
 
@@ -65,7 +64,7 @@ void Renderer::ClearScreen(const HAPI_TColour argScreenColour)
 
 }
 
-void Renderer::DrawSprite(const std::string& argSpritePath, const Vector2<float> argPosition, Vector2<int>& argCurrentCells)
+void Renderer::DrawSprite(const std::string& argSpritePath, const Vector2<float> argPosition, Vector2<unsigned int>& argCurrentCells)
 {
 	if (screenPointer == nullptr)
 	{
@@ -73,6 +72,7 @@ void Renderer::DrawSprite(const std::string& argSpritePath, const Vector2<float>
 		return;
 	}
 
+	/// Checks if sprite has been created in map
 	if (spriteMap.find(argSpritePath) != spriteMap.end())
 	{
 		std::shared_ptr<Sprite> sprite{ spriteMap.at(argSpritePath) };

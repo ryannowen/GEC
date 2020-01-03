@@ -19,8 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Archer.cpp" />
+    <ClCompile Include="Controller_Player.cpp" />
+    <ClCompile Include="Controller_Slime.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -28,26 +32,41 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Star.cpp" />
-    <ClCompile Include="Starfield.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Slime.cpp" />
+    <ClCompile Include="Slime_Explosive.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="TriggerBox.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Archer.h" />
+    <ClInclude Include="Controller_Player.h" />
+    <ClInclude Include="Controller_Slime.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Star.h" />
-    <ClInclude Include="Starfield.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Slime.h" />
+    <ClInclude Include="Slime_Explosive.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="TriggerBox.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

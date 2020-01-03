@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-bool Sprite::FastBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<float> argPosition)
+bool Sprite::FastBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition)
 {
 	BYTE* texturePointer = texturePtr;
 
@@ -8,8 +8,10 @@ bool Sprite::FastBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<floa
 	argScreenPointer += (static_cast<size_t>(argPosition.y) * argScreen.Width() + static_cast<int>(argPosition.x)) * 4;
 	texturePointer += (static_cast<size_t>(spriteBounds.top) * spriteDimensions.x + static_cast<int>(spriteBounds.left)) * 4;
 
+	const int boundsHeight{ spriteBounds.Height() };
+
 	///Draws Texture
-	for (int i = 0; i < spriteBounds.Height(); i++)
+	for (int i = 0; i < boundsHeight; i++)
 	{
 		memcpy(argScreenPointer, texturePointer, static_cast<size_t>(spriteBounds.Width()) * 4);
 
@@ -21,7 +23,7 @@ bool Sprite::FastBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<floa
 	return true;
 }
 
-bool Sprite::AlphaBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<float> argPosition)
+bool Sprite::AlphaBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition)
 {
 	BYTE* texturePointer = texturePtr;
 
@@ -42,7 +44,7 @@ bool Sprite::AlphaBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<flo
 		{
 			if (texturePointer[3] == 255) /// Full alpha = Copy full pixel
 				memcpy(argScreenPointer, texturePointer, 4);
-			else if (texturePointer[3] != 0) /// Not full alpha = Blend between screen and pixel (Also skips to allow for offset Increments)
+			else if (texturePointer[3] != 0) /// Not full alpha = Blend between screen and pixel
 			{
 				alpha = texturePointer[3];
 
@@ -64,8 +66,8 @@ bool Sprite::AlphaBlit(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<flo
 	return true;
 }
 
-Sprite::Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<int> argNumOfSpriteCells)
-	: hasAlpha(argHasAlpha), numOfCells(argNumOfSpriteCells)
+Sprite::Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<int> argTotalNumOfSpriteCells)
+	: hasAlpha(argHasAlpha), totalNumOfCells(argTotalNumOfSpriteCells)
 {
 	if (argSpritePath != "")
 		LoadTexture(argSpritePath, hasAlpha);
@@ -93,26 +95,16 @@ bool Sprite::LoadTexture(const std::string& argSpritePath, const bool argHasAlph
 	return true;
 }
 
-bool Sprite::DrawSprite(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<float> argPosition, Vector2<int>& argCurrentCells)
+bool Sprite::DrawSprite(BYTE* argScreenPointer, const Rectangle& argScreen, Vector2<float> argPosition, Vector2<unsigned int>& argCurrentCells)
 {
 	if (texturePtr == nullptr)
 		return false;
 
 	/// Updates Bounds to sprite cell size
-	spriteBounds.UpdateDimensions(spriteDimensions.x / numOfCells.x, spriteDimensions.y / numOfCells.y);
+	spriteBounds.UpdateDimensions(spriteDimensions.x / totalNumOfCells.x, spriteDimensions.y / totalNumOfCells.y);
 
-	/// Wraps Sprite current cells between 1 and maximum number of cells
-	if (argCurrentCells.x > numOfCells.x)
-		argCurrentCells.x = 1;
-	else if(argCurrentCells.x < 1)
-		argCurrentCells.x = numOfCells.x;
-
-	if (argCurrentCells.y > numOfCells.y)
-		argCurrentCells.y = 1;
-	else if (argCurrentCells.y < 1)
-		argCurrentCells.y = numOfCells.y;
-
-
+	/// Calculates cell location on spritesheet for translating when drawing (Required before clipping)
+	int CellLocX{ spriteBounds.right * (static_cast<int>(argCurrentCells.x)) }, CellLocY{ spriteBounds.bottom * (static_cast<int>(argCurrentCells.y)) };
 
 	/// Translates Sprite into Screen Space
 	spriteBounds.Translate(static_cast<int>(argPosition.x), static_cast<int>(argPosition.y));
@@ -137,8 +129,6 @@ bool Sprite::DrawSprite(BYTE* argScreenPointer, Rectangle& argScreen, Vector2<fl
 	{
 		argPosition.y = 0;
 	}
-
-	int CellLocX{ spriteBounds.right * (argCurrentCells.x - 1) }, CellLocY{ spriteBounds.bottom * (argCurrentCells.y - 1) };
 
 	/// Translates into correct cell location for sprite
 	spriteBounds.Translate(CellLocX, CellLocY);
