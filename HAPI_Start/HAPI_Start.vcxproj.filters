@@ -231,6 +231,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Button_ChangeDifficulty.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector2.h">
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_ChangeDifficulty.h">
+      <Filter>Header Files\UI\Buttons</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

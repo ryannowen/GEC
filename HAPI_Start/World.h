@@ -20,6 +20,15 @@ enum class EEnemyPlacement;
 class Renderer;
 class Entity;
 
+enum class EDifficulty
+{
+	eEasy,
+	eNormal,
+	eHard,
+	eInsane,
+	eCount
+};
+
 enum class EWorldState
 {
 	eMainMenu,
@@ -65,6 +74,7 @@ private:
 
 	static std::shared_ptr<World> world;
 	EWorldState worldState{ EWorldState::eMainMenu };
+	EDifficulty difficulty{ EDifficulty::eEasy };
 	std::unordered_map<std::string, std::shared_ptr<Scene>> scenes;
 	
 	Vector2<float> playerSpawn{ 64, 767 };
@@ -170,6 +180,8 @@ public:
 	void ResetGame();
 
 	void IncreaseDefeatedEnemies();
+	void ChangeDifficulty(); 
+
 	void AddScore(const unsigned int argScore) { score += argScore; };
 	void SaveGameData();
 	void LoadGameData();
@@ -185,6 +197,7 @@ public:
 	std::shared_ptr<Entity> GetPlayer();
 	std::shared_ptr<Entity> GetOpposingPlayer();
 	ESceneState GetSceneState() const { return sceneState; };
+	EDifficulty GetDifficulty() const { return difficulty; };
 };
 
 #define WORLD World::GetInstance()

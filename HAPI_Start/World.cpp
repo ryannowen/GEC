@@ -250,7 +250,11 @@ bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float>
 	{
 		if (!globalScene->entities[static_cast<size_t>(entityIndex) + i]->GetActive())
 		{
-			globalScene->entities[static_cast<size_t>(entityIndex) + i]->Init(argPosition - argPositionOffset, argSide, argSpeed, argMaxSpeed, argHealth, argDamage);
+			int health{ argHealth };
+			if (health != 0)
+				health += static_cast<int>(difficulty);
+
+			globalScene->entities[static_cast<size_t>(entityIndex) + i]->Init(argPosition - argPositionOffset, argSide, argSpeed, argMaxSpeed, health, argDamage);
 			return true;
 		}
 	}
@@ -270,7 +274,7 @@ void World::SpawnMiniBoss()
 	{
 		if (!globalScene->entities[bossIndex + i]->GetActive())
 		{
-			globalScene->entities[bossIndex + i]->Init(Vector2<float>(768, 600), ESide::ePlayerBoss, Vector2<float>(200, 200), 200, 5, 4);
+			globalScene->entities[bossIndex + i]->Init(Vector2<float>(768, 600), ESide::ePlayerBoss, Vector2<float>(200, 200), 200, 5 + static_cast<int>(difficulty), 4 );
 			return;
 		}
 	}
@@ -284,7 +288,7 @@ void World::SpawnBoss()
 	{
 		if (!globalScene->entities[bossIndex + i]->GetActive())
 		{
-			globalScene->entities[bossIndex + i]->Init(Vector2<float>(768, 600), ESide::ePlayerBoss, Vector2<float>(500, 7500), 500, 10, 6);
+			globalScene->entities[bossIndex + i]->Init(Vector2<float>(768, 600), ESide::ePlayerBoss, Vector2<float>(500, 7500), 500, 10 + static_cast<int>(difficulty), 6);
 			return;
 		}
 	}
@@ -779,6 +783,16 @@ void World::IncreaseDefeatedEnemies()
 	{
 		SpawnEntity(ESpawnableEntities::eVortex, Vector2<float>(768, 672), Vector2<float>(0, 0), ESide::eEnvironment);
 	}
+}
+
+void World::ChangeDifficulty()
+{
+	int dif{ static_cast<int>(difficulty) + 1 };
+
+	if (dif >= static_cast<int>(EDifficulty::eCount))
+		dif = 0;
+
+	difficulty = static_cast<EDifficulty>(dif);
 }
 
 void World::SaveGameData()
