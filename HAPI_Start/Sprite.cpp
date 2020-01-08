@@ -2,22 +2,26 @@
 
 bool Sprite::FastBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition)
 {
-	BYTE* texturePointer = texturePtr;
+	BYTE* texturePointer{ texturePtr };
+
+	const int boundsHeight{ spriteBounds.Height() };
+	const int boundsWidth{ spriteBounds.Width() };
 
 	/// Adds offsets
 	argScreenPointer += (static_cast<size_t>(argPosition.y) * argScreen.Width() + static_cast<int>(argPosition.x)) * 4;
 	texturePointer += (static_cast<size_t>(spriteBounds.top) * spriteDimensions.x + static_cast<int>(spriteBounds.left)) * 4;
 
-	const int boundsHeight{ spriteBounds.Height() };
+	const int screenNextLineOffset{ argScreen.Width() * 4 };
+	const int textureNextLineOffset{ spriteDimensions.x * 4 };
 
 	///Draws Texture
 	for (int i = 0; i < boundsHeight; i++)
 	{
-		memcpy(argScreenPointer, texturePointer, static_cast<size_t>(spriteBounds.Width()) * 4);
+		memcpy(argScreenPointer, texturePointer, static_cast<size_t>(boundsWidth) * 4);
 
 		/// Applies Offsets
-		argScreenPointer += (static_cast<size_t>(argScreen.Width() )) * 4;
-		texturePointer += (static_cast<size_t>(spriteDimensions.x) ) * 4;
+		argScreenPointer += screenNextLineOffset;
+		texturePointer += textureNextLineOffset;
 	}
 
 	return true;
@@ -25,29 +29,28 @@ bool Sprite::FastBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const 
 
 bool Sprite::AlphaBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition)
 {
-	BYTE* texturePointer = texturePtr;
+	BYTE* texturePointer{ texturePtr };
+
+	const int boundsHeight{ spriteBounds.Height() };
+	const int boundsWidth{ spriteBounds.Width() };
 
 	/// Adds offsets
 	argScreenPointer += (static_cast<size_t>(argPosition.y) * argScreen.Width() + static_cast<int>(argPosition.x)) * 4;
 	texturePointer += (static_cast<size_t>(spriteBounds.top) * spriteDimensions.x + static_cast<int>(spriteBounds.left)) * 4;
 
-	int alpha{ 0 };
-	const int screenNextLineOffset{ (argScreen.Width() - spriteBounds.Width()) * 4 };
-	const int textureNextLineOffset{ (spriteDimensions.x - spriteBounds.Width()) * 4 };
-
-	const int boundsHeight{ spriteBounds.Height() };
-	const int boundsWidth{ spriteBounds.Width() };
+	const int screenNextLineOffset{ (argScreen.Width() - boundsWidth) * 4 };
+	const int textureNextLineOffset{ (spriteDimensions.x - boundsWidth) * 4 };
 
 	for (int y = 0; y < boundsHeight; y++)
 	{
 		for (int x = 0; x < boundsWidth; x++)
 		{
-			if (texturePointer[3] == 255) /// Full alpha = Copy full pixel
-				memcpy(argScreenPointer, texturePointer, 4);
-			else if (texturePointer[3] != 0) /// Not full alpha = Blend between screen and pixel
-			{
-				alpha = texturePointer[3];
+			const int alpha{ texturePointer[3] };
 
+			if (alpha == 255) /// Full alpha = Copy full pixel
+				memcpy(argScreenPointer, texturePointer, 4);
+			else if (alpha != 0) /// Not full alpha = Blend between screen and pixel
+			{
 				argScreenPointer[0] += ((alpha * (texturePointer[0] - argScreenPointer[0])) >> 8);
 				argScreenPointer[1] += ((alpha * (texturePointer[1] - argScreenPointer[1])) >> 8);
 				argScreenPointer[2] += ((alpha * (texturePointer[2] - argScreenPointer[2])) >> 8);
@@ -66,7 +69,7 @@ bool Sprite::AlphaBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const
 	return true;
 }
 
-Sprite::Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<int> argTotalNumOfSpriteCells)
+Sprite::Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<unsigned int> argTotalNumOfSpriteCells)
 	: hasAlpha(argHasAlpha), totalNumOfCells(argTotalNumOfSpriteCells)
 {
 	if (argSpritePath != "")

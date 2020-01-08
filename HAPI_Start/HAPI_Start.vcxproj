@@ -20,8 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Archer.cpp" />
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Controller_Archer.cpp" />
+    <ClCompile Include="Controller_Bat.cpp" />
+    <ClCompile Include="Controller_OpposingPlayer.cpp" />
     <ClCompile Include="Controller_Player.cpp" />
     <ClCompile Include="Controller_Slime.cpp" />
+    <ClCompile Include="Controller_Sorcerer.cpp" />
+    <ClCompile Include="Controller_Sorcerer_Boss.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Explosion.cpp" />
@@ -32,41 +39,90 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player_Opposing.cpp" />
+    <ClCompile Include="Possession.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="Projectile_Fireball.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Slime.cpp" />
     <ClCompile Include="Slime_Explosive.cpp" />
+    <ClCompile Include="Sorcerer.cpp" />
+    <ClCompile Include="Sorcerer_Boss.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="TriggerBox.cpp" />
+    <ClCompile Include="Vortex.cpp" />
+    <ClCompile Include="UI_Button.cpp" />
+    <ClCompile Include="UI_Button_MainMenu.cpp" />
+    <ClCompile Include="UI_Button_Quit.cpp" />
+    <ClCompile Include="UI_Button_Resume.cpp" />
+    <ClCompile Include="UI_Button_Reward.cpp" />
+    <ClCompile Include="UI_Button_ScoreScreen.cpp" />
+    <ClCompile Include="UI_Button_StartGame.cpp" />
+    <ClCompile Include="UI_Element.cpp" />
+    <ClCompile Include="UI_Element_Image.cpp" />
+    <ClCompile Include="UI_Interface.cpp" />
+    <ClCompile Include="UI_Text.cpp" />
+    <ClCompile Include="UI_Window.cpp" />
+    <ClCompile Include="UI_Window_HUD.cpp" />
+    <ClCompile Include="UI_Window_MainMenu.cpp" />
+    <ClCompile Include="UI_Window_PauseMenu.cpp" />
+    <ClCompile Include="UI_Window_Reward.cpp" />
+    <ClCompile Include="UI_Window_ScoreScreen.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archer.h" />
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="Bat.h" />
+    <ClInclude Include="Controller_Archer.h" />
+    <ClInclude Include="Controller_Bat.h" />
+    <ClInclude Include="Controller_OpposingPlayer.h" />
     <ClInclude Include="Controller_Player.h" />
     <ClInclude Include="Controller_Slime.h" />
+    <ClInclude Include="Controller_Sorcerer.h" />
+    <ClInclude Include="Controller_Sorcerer_Boss.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Player_Opposing.h" />
+    <ClInclude Include="Possession.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Projectile_Fireball.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Slime.h" />
     <ClInclude Include="Slime_Explosive.h" />
+    <ClInclude Include="Sorcerer.h" />
+    <ClInclude Include="Sorcerer_Boss.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="TriggerBox.h" />
+    <ClInclude Include="Vortex.h" />
+    <ClInclude Include="UI_Button.h" />
+    <ClInclude Include="UI_Button_MainMenu.h" />
+    <ClInclude Include="UI_Button_Quit.h" />
+    <ClInclude Include="UI_Button_Resume.h" />
+    <ClInclude Include="UI_Button_Reward.h" />
+    <ClInclude Include="UI_Button_ScoreScreen.h" />
+    <ClInclude Include="UI_Button_StartGame.h" />
+    <ClInclude Include="UI_Element.h" />
+    <ClInclude Include="UI_Element_Image.h" />
+    <ClInclude Include="UI_Interface.h" />
+    <ClInclude Include="UI_Text.h" />
+    <ClInclude Include="UI_Window.h" />
+    <ClInclude Include="UI_Window_HUD.h" />
+    <ClInclude Include="UI_Window_MainMenu.h" />
+    <ClInclude Include="UI_Window_PauseMenu.h" />
+    <ClInclude Include="UI_Window_Reward.h" />
+    <ClInclude Include="UI_Window_ScoreScreen.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="World.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

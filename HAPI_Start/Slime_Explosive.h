@@ -3,6 +3,7 @@
 class Slime_Explosive : public Slime
 {
 protected:
+	virtual void OnDeath() override final;
 	virtual void OnAnimFinished() override final;
 
 public:

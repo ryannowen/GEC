@@ -75,10 +75,10 @@ namespace HAPISPACE {
 		H_NUM_HAPI_SYSTEMS
 	};
 
-	/** <summary>	Message box button types for use in the HAPI_MessageBox call. </summary> */
+	/** <summary>	Message box buttonCollision types for use in the HAPI_MessageBox call. </summary> */
 	enum class HAPI_ButtonType
 	{
-		eButtonTypeOk,				// Just an OK button
+		eButtonTypeOk,				// Just an OK buttonCollision
 		eButtonTypeOkCancel,		// OK and CANCEL buttons
 		eButtonTypeYesNo,			// YES and NO buttons
 		eButtonTypeYesNoCancel		// YES, NO and CANCEL buttons
@@ -88,10 +88,10 @@ namespace HAPISPACE {
 	enum class HAPI_UserResponse
 	{
 		eUserResponseUnknown = -1,
-		eUserResponseOk,		// OK button clicked by user
-		eUserResponseCancel,	// CANCEL button clicked
-		eUserResponseYes,		// YES button clicked
-		eUserResponseNo			// NO button clicked
+		eUserResponseOk,		// OK buttonCollision clicked by user
+		eUserResponseCancel,	// CANCEL buttonCollision clicked
+		eUserResponseYes,		// YES buttonCollision clicked
+		eUserResponseNo			// NO buttonCollision clicked
 	};
 
 	/**
@@ -127,7 +127,7 @@ namespace HAPISPACE {
 	/**
 	* \struct HAPI_TControllerData
 	* \brief Contains information about a controller state
-	* Note that not all controllers have HAPI_MAX_BUTTON_ARRAY_SIZE of each type of button
+	* Note that not all controllers have HAPI_MAX_BUTTON_ARRAY_SIZE of each type of buttonCollision
 	* Note: you can use the defines in HAPI_InputCodes.h as indices into the arrays
 	*/
 	struct HAPI_TControllerData final

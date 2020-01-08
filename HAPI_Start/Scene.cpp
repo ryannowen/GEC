@@ -1,13 +1,15 @@
 #include "Scene.h"
 
+#include "World.h"
 #include "Time.h"
+#include "Tile.h"
 
 Scene::Scene(const std::string& argSceneName, const int argLevelLength, const ESceneType argSceneType)
 	: sceneName(argSceneName), levelLength(argLevelLength), sceneType(argSceneType)
 {
 }
 
-void Scene::SpawnEntity(std::shared_ptr<Entity>& argEntity, const bool argHasAlpha, Vector2<int> argNumOfSpriteCells)
+void Scene::CreateEntity(std::shared_ptr<Entity>& argEntity, const bool argHasAlpha, const Vector2<unsigned int> argNumOfSpriteCells)
 {
 	if (argEntity == nullptr)
 	{
@@ -16,7 +18,7 @@ void Scene::SpawnEntity(std::shared_ptr<Entity>& argEntity, const bool argHasAlp
 	}
 
 	if (!argEntity->CreateSprite(argHasAlpha, argNumOfSpriteCells))
-		std::clog << "WARNING - Spawning entity but sprite already created, SpawningID=" << entities.size() << std::endl;
+		std::clog << "ERROR - Spawning entity but failed, SpawningID=" << entities.size() << std::endl;
 
 	/// Adds entity to vector
 	entities.push_back(argEntity);
@@ -52,6 +54,9 @@ void Scene::CheckCollisions()
 					{
 						entities[i]->Collided(*entities[j]);
 						entities[j]->Collided(*entities[i]);
+
+						entities[i]->AfterCollided(*entities[j]);
+						entities[j]->AfterCollided(*entities[i]);
 					}
 				}
 			}
@@ -97,4 +102,11 @@ void Scene::DrawScene(const float argInterp, const float argCameraOffset) const
 	for (std::shared_ptr<Entity> entity : entities)
 		if (entity->GetActive())
 			entity->Draw(argInterp, argCameraOffset);
+}
+
+void Scene::DisableAllEntities()
+{
+	for (std::shared_ptr<Entity> entity : entities)
+		if(entity->GetActive())
+			entity->SetActive(false);
 }

@@ -2,6 +2,24 @@
 
 #include "Time.h"
 #include "World.h"
+#include "Audio.h"
+
+void Slime::Attack()
+{
+	AUDIO.PlaySound(attackSound);
+	velocity = Vector2<float>(0, 0);
+	isAttacking = true;
+	canAttack = false;
+	damage = attackDamage;
+}
+
+void Slime::OnDeath()
+{
+	WORLD.IncreaseDefeatedEnemies();
+	WORLD.AddScore(30);
+
+	AUDIO.PlaySound(deathSound);
+}
 
 void Slime::OnAnimFinished()
 {
@@ -13,65 +31,40 @@ void Slime::OnAnimFinished()
 	}
 }
 
-void Slime::ApplyPhysics()
+void Slime::OnDisable()
 {
-	const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
-
-	Vector2<float> dir{ player->currentPosition - currentPosition };
-
-	dir.Normalise();
-
-	
-	velocity.y += gravity * TIME.GetTickTimeSeconds(); /// Applies Gravity
-	
-
-	acceleration += (dir * speed) * TIME.GetTickTimeSeconds();
-
-
-	velocity += acceleration;
-
-	if (velocity.x > maxSpeed)
-		velocity.x = maxSpeed;
-	else if (velocity.x < -maxSpeed)
-		velocity.x = -maxSpeed;
-
-	if (static_cast<int>(velocity.x) != 0)
+	if (isPossessed)
 	{
-		if (velocity.x > 0)
-		{
-			velocity.x -= drag * TIME.GetTickTimeSeconds();
-			if (velocity.x < 0)
-				velocity.x = 0;
-		}
-		else
-		{
-			velocity.x += drag * TIME.GetTickTimeSeconds();
-			if (velocity.x > 0)
-				velocity.x = 0;
-		}
+		isPossessed = false;
+		std::shared_ptr<Entity> opposingPlayer{ WORLD.GetOpposingPlayer() };
+
+		SwapControllerInput(opposingPlayer);
+		opposingPlayer->SetActive(true);
 	}
 
-
-
-	Translate(velocity * TIME.GetTickTimeSeconds());
-
-	acceleration = Vector2<float>(0.0f, 0.0f);
-
-	isGrounded = false;
+	ResetEntity();
 }
+
 
 Slime::Slime(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds)
 	: Entity(argSpritePath, argAnimData, argCollisionBounds, std::shared_ptr<Controller>(std::make_shared<Controller_Slime>()))
 {
+	AUDIO.LoadSound(attackSound, HAPI_TSoundOptions(0.5f));
+	AUDIO.LoadSound(deathSound, HAPI_TSoundOptions(0.5f));
+
+	isPossessable = true;
+	passable = true;
+	hasGravity = true;
 }
 
 void Slime::Update()
 {
-	entityController->Update(*this, 0);
-	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
+	/// Prevents input (Ai and Player) if possession isn't enabled
+	if (WORLD.GetSceneState() != ESceneState::ePossession)
+		return;
 
-//	velocity.y += gravity * TIME.GetTickTimeSeconds();
-	//Translate(velocity);
+	entityController->Update(*this, 1);
+	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
 
 	if (isCharging)
 	{
@@ -86,29 +79,67 @@ void Slime::Update()
 	}
 	else if (isAttacking)
 		return;
-	else if (entityController->GetAction() == EAction::eMoveLeft || entityController->GetAction() == EAction::eMoveRight)
-		ApplyPhysics();
+
+	if (isPossessed && !isAttacking && !isCharging && canAttack)
+	{
+		Vector2<float> dir{ entityController->GetMovementDirection(1) };
+		dir.y = 0;
+		ApplyPhysics(dir);
+	}
+	else if (!isAttacking && !isCharging && canAttack)
+	{
+		const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
+		Vector2<float> dir{ player->currentPosition - currentPosition };
+
+		dir.Normalise();
+		if (dir.y < 0 || !isGrounded)
+			dir.y = 0;
+		else
+			dir.y = std::round(dir.y);
+
+		dir.x = std::round(dir.x);
+
+		ApplyPhysics(dir);
+	}
+	else
+	{
+		velocity = Vector2<float>(0, 0);
+	}
 }
 
-
-void Slime::Collided(Entity& argEntity)
+void Slime::Init(const Vector2<float>& argPosition, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage)
 {
-	/// Applies damage
-	TakeDamage(argEntity);
-
-	/// This entity
-	if (static_cast<int>(currentPosition.y) != static_cast<int>(oldPosition.y))
+	if (entityController == nullptr)
 	{
-		currentPosition.y = oldPosition.y;
-
-		velocity = Vector2<float>(velocity.x, 0);
-	}
-	else if (static_cast<int>(currentPosition.x) != static_cast<int>(oldPosition.x))
-	{
-		currentPosition.x = oldPosition.x;
-
-		velocity = Vector2<float>(0, velocity.y);
+		std::cerr << "ERROR: Entity Controller is nullptr" << std::endl;
+		return;
 	}
 
-	damage = 0;
+	active = true;
+
+	Vector2<float> pos{ argPosition };
+	pos.y -= collisionBounds.bottom;
+	currentPosition = pos;
+	oldPosition = pos;
+
+	speed = argSpeed;
+	maxSpeed = argMaxSpeed;
+	entityController->SetSide(argSide);
+	health = argHealth;
+	attackDamage = argDamage;
+}
+
+void Slime::AfterCollided(Entity& argEntity)
+{
+	if (argEntity == *WORLD.GetPlayer())
+		damage = 0;
+}
+
+void Slime::ResetEntity()
+{
+	isAttacking = false;
+	canAttack = true;
+	isCharging = false;
+
+	reChargeDelay = 0;
 }

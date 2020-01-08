@@ -29,6 +29,12 @@ bool Controller::GetFacingDirection() const
 		return false;
 }
 
+void Controller::SwapInput(Controller& argController)
+{
+	std::swap(keyboardInput, argController.keyboardInput);
+	std::swap(controllerInput, argController.controllerInput);
+}
+
 void Controller::SetKeyboardInput(const std::vector<int>& argKeyboardInput)
 {
 	keyboardInput = argKeyboardInput;
@@ -78,7 +84,7 @@ Vector2<float> Controller::GetMovementDirection(const unsigned int argPlayerID) 
 	return direction;
 }
 
-bool Controller::isJumping(const unsigned int argPlayerID)
+bool Controller::GetIsJumping(const unsigned int argPlayerID)
 {
 	const HAPI_TControllerData& controllerData{ HAPI.GetControllerData(argPlayerID) };
 	bool jumping{ false };

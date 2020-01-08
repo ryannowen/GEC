@@ -3,68 +3,122 @@
 #include "World.h"
 #include "Time.h"
 
-Archer::Archer(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds)
-	: Entity(argSpritePath, argAnimData, argCollisionBounds, std::shared_ptr<Controller>(std::make_shared<Controller>()))
+#include "Controller_Archer.h"
+
+bool Archer::Attack(const Vector2<float> argDirection)
 {
+	Vector2<float> attackPos{ currentPosition };
+	attackPos.y = currentPosition.y + 12;
+
+	Vector2<float> projSpeed(1000, 1000);
+	projSpeed *= argDirection;
+
+	if (argDirection.x > 0)
+		attackPos.x = currentPosition.x + collisionBounds.right;
+	else
+		attackPos.x = currentPosition.x;
+	
+
+	if (WORLD.SpawnEntity(ESpawnableEntities::eArcherProjectile, attackPos, Vector2<float>(0,0), entityController->GetSide(),projSpeed, 400, 0, attackDamage))
+	{
+		canAttack = false;
+		isAttacking = true;
+
+		return true;
+	}
+
+	return false;
+}
+
+void Archer::OnDeath()
+{
+	WORLD.IncreaseDefeatedEnemies();
+	WORLD.AddScore(50);
+}
+
+void Archer::OnAnimFinished()
+{
+	if (isAttacking)
+	{
+		isAttacking = false;
+		isCharging = true;
+	}
+}
+
+void Archer::OnDisable()
+{
+	if (isPossessed)
+	{
+		isPossessed = false;
+		std::shared_ptr<Entity> opposingPlayer{ WORLD.GetOpposingPlayer() };
+
+		SwapControllerInput(opposingPlayer);
+		opposingPlayer->SetActive(true);
+	}
+
+	ResetEntity();
+}
+
+Archer::Archer(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds)
+	: Entity(argSpritePath, argAnimData, argCollisionBounds, std::shared_ptr<Controller>(std::make_shared<Controller_Archer>()))
+{
+	isPossessable = true;
+	passable = true;
+	hasGravity = true;
 }
 
 void Archer::Update()
 {
-	ApplyPhysics();
+	ApplyPhysics(Vector2<float>(0, 0));
+
+	/// Prevents input (Ai and Player) if possession isn't enabled
+	if (WORLD.GetSceneState() != ESceneState::ePossession)
+		return;
+
+	entityController->Update(*this, 1);
+	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
+
+	if (isCharging)
+	{
+		reChargeDelay += TIME.GetTickTimeSeconds();
+
+		if (reChargeDelay >= reChargeTime)
+		{
+			reChargeDelay = 0;
+			isCharging = false;
+			canAttack = true;
+		}
+	}
+
 }
 
-
-void Archer::ApplyPhysics()
+void Archer::Init(const Vector2<float>& argPosition, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage)
 {
-	const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
-
-	Vector2<float> dir{ player->currentPosition - currentPosition };
-
-	dir.Normalise();
-
-	if (isGrounded)
+	if (entityController == nullptr)
 	{
-		isGrounded = false;
-	}
-	else
-	{
-		dir.y = 0;
-		velocity.y += gravity * TIME.GetTickTimeSeconds(); /// Applies Gravity
+		std::cerr << "ERROR: Entity Controller is nullptr" << std::endl;
+		return;
 	}
 
-	acceleration += (dir * speed) * TIME.GetTickTimeSeconds();
+	active = true;
 
+	Vector2<float> pos{ argPosition };
+	pos.y -= collisionBounds.bottom;
+	currentPosition = pos;
+	oldPosition = pos;
 
-	velocity += acceleration;
+	speed = argSpeed;
+	maxSpeed = argMaxSpeed;
+	entityController->SetSide(argSide);
+	health = argHealth;
+	attackDamage = argDamage;
+}
 
-	if (velocity.x > maxSpeed)
-		velocity.x = maxSpeed;
-	else if (velocity.x < -maxSpeed)
-		velocity.x = -maxSpeed;
+void Archer::ResetEntity()
+{
+	isAttacking = false;
+	canAttack = true;
+	isCharging = false;
 
-	if (static_cast<int>(velocity.x) != 0)
-	{
-
-		if (velocity.x > 0)
-		{
-			velocity.x -= drag * TIME.GetTickTimeSeconds();
-			if (velocity.x < 0)
-				velocity.x = 0;
-		}
-		else
-		{
-			velocity.x += drag * TIME.GetTickTimeSeconds();
-			if (velocity.x > 0)
-				velocity.x = 0;
-		}
-
-	}
-
-
-
-	Translate(velocity * TIME.GetTickTimeSeconds());
-
-	acceleration = Vector2<float>(0.0f, 0.0f);
-
-	isGrounded = false;
+	reChargeDelay = 0;
 }

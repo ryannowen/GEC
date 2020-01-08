@@ -17,13 +17,13 @@ private:
 	Rectangle spriteBounds;
 	bool hasAlpha;
 
-	Vector2<int> totalNumOfCells{ 0, 0 };
+	Vector2<unsigned int> totalNumOfCells{ 0, 0 };
 
 	bool FastBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition);
 	bool AlphaBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition);
 
 public:
-	Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<int> argTotalNumOfSpriteCells);
+	Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<unsigned int> argTotalNumOfSpriteCells);
 	~Sprite();
 	bool LoadTexture(const std::string& argSpritePath, const bool argHasAlpha = false);
 	bool DrawSprite(BYTE* argScreenPointer, const Rectangle& argScreen, Vector2<float> argPosition, Vector2<unsigned int>& argCurrentCells);

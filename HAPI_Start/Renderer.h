@@ -39,7 +39,7 @@ public:
 
 	void CreateWindow(Vector2<int> argScreenDimensions = Vector2<int>(1600, 900), const std::string& argWindowName = "Unknown Name");
 
-	bool CreateSprite(const std::string& argSpritePath, const bool argHasAlpha, Vector2<int> argNumOfSpriteCells);
+	bool CreateSprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<unsigned int> argNumOfSpriteCells);
 
 	void ClearScreen(const HAPI_TColour argColour);
 	void DrawSprite(const std::string& argSpritePath, const Vector2<float> argPosition, Vector2<unsigned int>& argCurrentCells);

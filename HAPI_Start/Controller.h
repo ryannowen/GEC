@@ -48,6 +48,8 @@ public:
 	// Returns true if right, false if left
 	bool GetFacingDirection() const;
 
+
+	void SwapInput(Controller& argController);
 	void SetKeyboardInput(const std::vector<int>& argKeyboardInput);
 	void SetControllerInput(const std::vector<int>& argControllerInput);
 
@@ -56,7 +58,7 @@ public:
 
 
 	Vector2<float> GetMovementDirection(const unsigned int argPlayerID) const;
-	bool isJumping(const unsigned int argPlayerID);
+	bool GetIsJumping(const unsigned int argPlayerID);
 
 	ESide GetSide() const { return controllerSide; };
 	EAction GetAction() const { return controllerAction; };

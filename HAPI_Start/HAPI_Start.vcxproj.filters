@@ -13,17 +13,77 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Entities">
-      <UniqueIdentifier>{a785599f-38cf-4f87-b696-5ee5ccca460d}</UniqueIdentifier>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{403dc04b-d132-44bd-b727-a14528c9a267}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Entities">
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{f661d9f7-f7eb-4300-bc1b-6aa672e53a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI\Windows">
+      <UniqueIdentifier>{d7eb0e04-d9c3-4a7d-8060-70f6b4570e24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI\Buttons">
+      <UniqueIdentifier>{7db92d01-5a81-4d22-bb04-f0b9a41f945f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Buttons">
+      <UniqueIdentifier>{c707d482-534b-48c5-978f-40e2b22cbd53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Windows">
+      <UniqueIdentifier>{c8340e1d-2a7c-474f-b712-597027a32c97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Elements">
+      <UniqueIdentifier>{277c3a8e-6d67-471f-8abb-93185312807e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI\Elements">
+      <UniqueIdentifier>{c7250361-8dd7-42f9-bc18-a23887f88664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{e2985e20-b143-4636-b3fd-954e4ec9613a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Audio">
+      <UniqueIdentifier>{d64d215a-226c-48f8-9be3-f3ea3eabb4f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{3f8c5dc4-91cb-4c62-9bd8-2d0c01acee78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities">
       <UniqueIdentifier>{c6e6751b-aaad-4fda-ba03-7dc5cfd6ad3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Entities\Controllers">
+    <Filter Include="Header Files\World\Entities\Controllers">
       <UniqueIdentifier>{8f58e0d4-85cd-4e58-9612-a8115ac16a47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Entities\Controllers">
+    <Filter Include="Header Files\World\Entities\Controllers\Bossess">
+      <UniqueIdentifier>{3780ea48-8402-4afd-84c7-be417bc4d9e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities\Enemies">
+      <UniqueIdentifier>{c415568f-2396-4f60-b6c0-9c81e826be62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities\Enemies\Bossess">
+      <UniqueIdentifier>{fc4f57c3-e650-41d8-89a9-be09eac95221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{876631b5-5d06-4d43-909a-ec1ac0299478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities">
+      <UniqueIdentifier>{a785599f-38cf-4f87-b696-5ee5ccca460d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Controllers">
       <UniqueIdentifier>{f059d910-f321-467a-854f-518b41a54372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Controllers\Bossess">
+      <UniqueIdentifier>{3fc1f5d9-89c6-44d8-9118-2c55265729ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Enemies">
+      <UniqueIdentifier>{00a00e5b-9b60-429c-b8d7-74121aac9909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Enemies\Bossess">
+      <UniqueIdentifier>{522dec00-08a8-4607-90ff-7afb69ab5d5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{d92426fe-8a19-42ce-aba8-00bc2110f896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Renderer">
+      <UniqueIdentifier>{22bf91e7-fe3d-4a52-abc1-e5f1dd3cedde}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,56 +93,143 @@
     <ClCompile Include="Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Rectangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Slime.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\World\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\World\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\World\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="TriggerBox.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\World\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Controller.cpp">
-      <Filter>Source Files\Entities\Controllers</Filter>
+      <Filter>Source Files\World\Entities\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Controller_Player.cpp">
-      <Filter>Source Files\Entities\Controllers</Filter>
+      <Filter>Source Files\World\Entities\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Controller_Slime.cpp">
-      <Filter>Source Files\Entities\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="Archer.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Slime_Explosive.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World\Entities\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Explosion.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Player_Opposing.cpp">
+      <Filter>Source Files\World\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_OpposingPlayer.cpp">
+      <Filter>Source Files\World\Entities\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Possession.cpp">
+      <Filter>Source Files\World\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Window.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Window_MainMenu.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button_MainMenu.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Window_PauseMenu.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button_StartGame.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button_Quit.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button_Resume.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Window_ScoreScreen.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Window_HUD.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Element.cpp">
+      <Filter>Source Files\UI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Text.cpp">
+      <Filter>Source Files\UI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button_ScoreScreen.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Window_Reward.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Element_Image.cpp">
+      <Filter>Source Files\UI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button_Reward.cpp">
+      <Filter>Source Files\UI\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Interface.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Archer.cpp">
+      <Filter>Source Files\World\Entities\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Bat.cpp">
+      <Filter>Source Files\World\Entities\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile_Fireball.cpp">
+      <Filter>Source Files\World\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Sorcerer.cpp">
+      <Filter>Source Files\World\Entities\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Vortex.cpp">
+      <Filter>Source Files\World\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Archer.cpp">
+      <Filter>Source Files\World\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Source Files\World\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime.cpp">
+      <Filter>Source Files\World\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime_Explosive.cpp">
+      <Filter>Source Files\World\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorcerer.cpp">
+      <Filter>Source Files\World\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorcerer_Boss.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Bossess</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Sorcerer_Boss.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Bossess</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,59 +239,146 @@
     <ClInclude Include="Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TriggerBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Controller.h">
-      <Filter>Header Files\Entities\Controllers</Filter>
+      <Filter>Header Files\World\Entities\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Controller_Player.h">
-      <Filter>Header Files\Entities\Controllers</Filter>
+      <Filter>Header Files\World\Entities\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Controller_Slime.h">
-      <Filter>Header Files\Entities\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="Archer.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\World\Entities\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\World\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\World\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Projectile.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Slime.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\World\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Tile.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Slime_Explosive.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\World\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Explosion.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\World\Entities</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="Player_Opposing.h">
+      <Filter>Header Files\World\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_OpposingPlayer.h">
+      <Filter>Header Files\World\Entities\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Possession.h">
+      <Filter>Header Files\World\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_MainMenu.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Window_MainMenu.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Window.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Window_PauseMenu.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_StartGame.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_Quit.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_Resume.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Window_HUD.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Window_ScoreScreen.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Element.h">
+      <Filter>Header Files\UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Text.h">
+      <Filter>Header Files\UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_ScoreScreen.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Window_Reward.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Element_Image.h">
+      <Filter>Header Files\UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button_Reward.h">
+      <Filter>Header Files\UI\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Interface.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Archer.h">
+      <Filter>Header Files\World\Entities\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Bat.h">
+      <Filter>Header Files\World\Entities\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile_Fireball.h">
+      <Filter>Header Files\World\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Sorcerer.h">
+      <Filter>Header Files\World\Entities\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vortex.h">
+      <Filter>Header Files\World\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Archer.h">
+      <Filter>Header Files\World\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>Header Files\World\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorcerer.h">
+      <Filter>Header Files\World\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime.h">
+      <Filter>Header Files\World\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime_Explosive.h">
+      <Filter>Header Files\World\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorcerer_Boss.h">
+      <Filter>Header Files\World\Entities\Enemies\Bossess</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Sorcerer_Boss.h">
+      <Filter>Header Files\World\Entities\Controllers\Bossess</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

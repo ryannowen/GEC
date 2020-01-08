@@ -1,10 +1,19 @@
 #include "Slime_Explosive.h"
 
+#include "World.h"
+
+void Slime_Explosive::OnDeath()
+{
+	WORLD.IncreaseDefeatedEnemies();
+	WORLD.AddScore(20);
+}
+
 void Slime_Explosive::OnAnimFinished()
 {
 	if (isAttacking)
 	{
 		SetActive(false);
+		OnDeath();
 	}
 }
 

@@ -12,10 +12,10 @@ public:
 
 	void Normalise()
 	{
-		float dot = sqrt(Dot());
+		const float dot = Dot();
 
 		if(dot != 0)
-			*this /= dot;
+			*this /= sqrt(dot);
 	}
 
 	float Dot() const
@@ -101,6 +101,16 @@ public:
 		y -= argInt;
 	}
 };
+
+// + vec2
+template <class T>
+inline bool operator==(const Vector2<T>& argVec1, const Vector2<T>& argVec2)
+{
+	if (argVec1.x == argVec2.x && argVec1.y == argVec2.y)
+		return true;
+	else
+		return false;
+}
 
 // + vec2
 template <class T>

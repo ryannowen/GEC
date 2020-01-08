@@ -1,8 +1,7 @@
 #include "Controller_Player.h"
 
+#include "World.h"
 #include "Player.h"
-
-
 
 void Controller_Player::Update(Entity& argEntity, const unsigned int argPlayerID)
 {
@@ -13,13 +12,10 @@ void Controller_Player::Update(Entity& argEntity, const unsigned int argPlayerID
 	{
 		const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
-		if (keyboardData.scanCode[keyboardInput[5]])
+		if (keyboardData.scanCode[keyboardInput[5]] && player->canAttack)
 		{
-			if (player->CanAttack())
-			{
+			if(player->Attack())
 				UpdateAnimDir(EAction::eAttackRight, EAction::eAttackLeft);
-				player->Attack();
-			}
 		}
 		else if (keyboardData.scanCode[keyboardInput[2]])
 			controllerAction = EAction::eMoveRight;
@@ -27,7 +23,7 @@ void Controller_Player::Update(Entity& argEntity, const unsigned int argPlayerID
 			controllerAction = EAction::eMoveLeft;
 		else if (keyboardData.scanCode[keyboardInput[4]])
 			UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
-		else
+		else if(!player->isAttacking)
 			UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
 
 

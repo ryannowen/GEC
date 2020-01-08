@@ -4,12 +4,16 @@
 #include "Time.h"
 #include "World.h"
 
+size_t Entity::numOfEntities{ 0 };
+
 Entity::Entity(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds, const std::shared_ptr<Controller>& argController)
 	: spritePath(argSpritePath), spriteAnimData(argAnimData), collisionBounds(argCollisionBounds), entityController(argController)
 {
+	entityID = numOfEntities;
+	numOfEntities++;
 }
 
-void Entity::Init(const Vector2<float>& argPosition, const Vector2<float>& argSpeed, const ESide argSide, const int argHealth, const int argDamage)
+void Entity::Init(const Vector2<float>& argPosition, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage)
 {
 	if (entityController == nullptr)
 	{
@@ -18,23 +22,28 @@ void Entity::Init(const Vector2<float>& argPosition, const Vector2<float>& argSp
 	}
 
 	active = true;
-	currentPosition = argPosition;
-	oldPosition = argPosition;
+
+	Vector2<float> pos{ argPosition };
+	pos.y -= collisionBounds.bottom;
+	currentPosition = pos;
+	oldPosition = pos;
+
 	speed = argSpeed;
+	maxSpeed = argMaxSpeed;
 	entityController->SetSide(argSide);
 	health = argHealth;
 	damage = argDamage;
 }
 
-void Entity::SwapController(std::shared_ptr<Entity>& argEntity)
+void Entity::SwapControllerInput(std::shared_ptr<Entity> argEntity)
 {
-	std::swap(argEntity->entityController, entityController);
+	entityController->SwapInput(*argEntity->entityController);
 }
 
 bool Entity::CheckCollision(const Entity& argEntity) const
 {
 	/// Returns false if entity is entity1
-	if (!active)
+	if (!active || !argEntity.active || !hasCollision || !argEntity.hasCollision)
 		return false;
 
 	/// Editable copy of each bounds
@@ -61,32 +70,41 @@ void Entity::Collided(Entity& argEntity)
 {
 	/// Applies damage
 	TakeDamage(argEntity);
-
-
-	if (currentPosition.y < argEntity.currentPosition.y)
-	{		
-		isGrounded = true;
-	}
-	else 
-	{	
-		argEntity.isGrounded = true;
-	}
-	
 	
 	/// This entity
-	if (static_cast<int>(currentPosition.y) != static_cast<int>(oldPosition.y))
+	if (!argEntity.passable)
 	{
-		currentPosition.y = oldPosition.y;
+		if (currentPosition.y < argEntity.currentPosition.y)
+		{
+			isGrounded = true;
+		}
+		else
+		{
+			argEntity.isGrounded = true;
+		}
 
-		velocity = Vector2<float>(velocity.x, 0);
+		if (static_cast<int>(currentPosition.y) != static_cast<int>(oldPosition.y))
+		{
+			currentPosition.y = oldPosition.y;
+
+			velocity = Vector2<float>(velocity.x, 0);
+		}
+		else if (static_cast<int>(currentPosition.x) != static_cast<int>(oldPosition.x))
+		{
+			currentPosition.x = oldPosition.x;
+
+			velocity = Vector2<float>(0, velocity.y);
+		}
 	}
-	else if (static_cast<int>(currentPosition.x) != static_cast<int>(oldPosition.x))
-	{
-		currentPosition.x = oldPosition.x;
+	
+}
 
-		velocity = Vector2<float>(0, velocity.y);
-	}
+void Entity::AfterCollided(Entity& argEntity)
+{
+}
 
+void Entity::OnDeath()
+{
 }
 
 void Entity::OnAnimFinished()
@@ -107,6 +125,8 @@ void Entity::OnDisable()
 {
 	spriteAnimData.currentSpriteCells.x = 0;
 	velocity = Vector2<float>(0, 0);
+
+	ResetEntity();
 }
 
 void Entity::OnEnable()
@@ -120,9 +140,9 @@ void Entity::Translate(Vector2<float>& argPosition)
 	currentPosition += argPosition;
 }
 
-void Entity::ApplyPhysics()
+void Entity::ApplyPhysics(const Vector2<float> argDirection)
 {
-	acceleration += speed * TIME.GetTickTimeSeconds();
+	acceleration += (argDirection * speed) * TIME.GetTickTimeSeconds();
 
 	velocity += acceleration;
 
@@ -167,6 +187,12 @@ void Entity::ApplyPhysics()
 				velocity.y = 0;
 		}
 	}
+	
+	/// Applies gravity
+	if (hasGravity)
+	{
+		velocity.y += gravity * TIME.GetTickTimeSeconds();
+	}
 
 	Translate(velocity * TIME.GetTickTimeSeconds());
 
@@ -182,6 +208,7 @@ bool Entity::TakeDamage(const Entity& argEntity)
 	if (health <= 0)
 	{
 		SetActive(false);
+		OnDeath();
 		return false;
 	}
 
@@ -189,7 +216,7 @@ bool Entity::TakeDamage(const Entity& argEntity)
 	return true;
 }
 
-bool Entity::CreateSprite(const bool argHasAlpha, const Vector2<int> argNumOfSpriteCells)
+bool Entity::CreateSprite(const bool argHasAlpha, const Vector2<unsigned int> argNumOfSpriteCells)
 {
 	return RENDERER.CreateSprite(spritePath, argHasAlpha, argNumOfSpriteCells);
 }
@@ -198,6 +225,9 @@ void Entity::Draw(const float argInterp, const float argCameraOffset)
 {
 	/// Doesn't draw if entity is not active
 	if (!active)
+		return;
+
+	if (spritePath == std::string())
 		return;
 
 	/// Calculates interpolation position to smoothly draw between the old and new position
@@ -229,6 +259,10 @@ void Entity::Draw(const float argInterp, const float argCameraOffset)
 	}
 
 	RENDERER.DrawSprite(spritePath, newPosition, spriteAnimData.currentSpriteCells);
+}
+
+void Entity::ResetEntity()
+{
 }
 
 void Entity::AddVelocity(Vector2<float> argVelocity)

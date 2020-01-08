@@ -11,17 +11,24 @@ Renderer::Renderer()
 
 void Renderer::CreateWindow(Vector2<int> argScreenDimensions, const std::string& argWindowName)
 {
+	/// Creates Screen
 	if (!HAPI.Initialise(argScreenDimensions.x, argScreenDimensions.y, argWindowName))
 		return;
 
+	/// Updates screen dimensions and bounds
 	screenDimensions = argScreenDimensions;
-
-	screenPointer = HAPI.GetScreenPointer();
 	screenBounds.UpdateDimensions(screenDimensions.x, screenDimensions.y);
+
+	/// Gets screen pointer for drawing
+	screenPointer = HAPI.GetScreenPointer();
 }
 
-bool Renderer::CreateSprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<int> argNumOfSpriteCells)
+bool Renderer::CreateSprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<unsigned int> argNumOfSpriteCells)
 {
+	if (argSpritePath == "")
+		return false;
+	
+	/// Checks if space is available in map for sprite, and creates sprite if there is
 	if (spriteMap.find(argSpritePath) == spriteMap.end())
 	{
 		spriteMap[argSpritePath] = std::make_shared<Sprite>(argSpritePath, argHasAlpha, argNumOfSpriteCells);

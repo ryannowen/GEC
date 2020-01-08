@@ -9,7 +9,8 @@ enum class ESceneType
 	eNone,
 	eTransition,
 	eBoss,
-	eReward
+	eReward,
+	eUI
 };
 
 class Scene
@@ -22,14 +23,15 @@ public:
 	std::vector<std::shared_ptr<Entity>> entities; // MOVE TO PRivate
 	Scene(const std::string& argSceneName, const int argLevelLength, const ESceneType argSceneType);
 
-	void SpawnEntity(std::shared_ptr<Entity>& argEntity, const bool argHasAlpha, Vector2<int> argNumOfSpriteCells);
+	void CreateEntity(std::shared_ptr<Entity>& argEntity, const bool argHasAlpha, const Vector2<unsigned int> argNumOfSpriteCells);
 	void UpdateScene();
-
 	// Checks collisions against self
 	void CheckCollisions();
 	// Checks collisions against another scene
 	void CheckCollisions(std::shared_ptr<Scene> argScene);
 	void DrawScene(const float argInterp, const float argCameraOffset) const;
+
+	void DisableAllEntities();
 
 	int GetLevelLength() const { return levelLength; };
 	ESceneType GetSceneType() const { return sceneType; };
