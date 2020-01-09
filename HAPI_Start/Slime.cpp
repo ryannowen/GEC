@@ -4,6 +4,8 @@
 #include "World.h"
 #include "Audio.h"
 
+#include "Player_Opposing.h"
+
 void Slime::Attack()
 {
 	AUDIO.PlaySound(attackSound);
@@ -33,13 +35,11 @@ void Slime::OnAnimFinished()
 
 void Slime::OnDisable()
 {
+	/// Stops being possessed
 	if (isPossessed)
 	{
-		isPossessed = false;
-		std::shared_ptr<Entity> opposingPlayer{ WORLD.GetOpposingPlayer() };
-
-		SwapControllerInput(opposingPlayer);
-		opposingPlayer->SetActive(true);
+		std::shared_ptr<Player_Opposing> opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
+		opposingPlayer->StopPossessing();
 	}
 
 	ResetEntity();
@@ -59,52 +59,53 @@ Slime::Slime(const std::string& argSpritePath, const AnimationData& argAnimData,
 
 void Slime::Update()
 {
+	Vector2<float> dir(0, 0);
+
 	/// Prevents input (Ai and Player) if possession isn't enabled
 	if (WORLD.GetSceneState() != ESceneState::ePossession)
+	{
+		ApplyPhysics(dir);
 		return;
+	}
 
-	entityController->Update(*this, 1);
+	/// Updates controller
+	entityController->Update(*this, playerID);
 	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
 
-	if (isCharging)
-	{
-		reChargeDelay += TIME.GetTickTimeSeconds();
 
-		if (reChargeDelay >= reChargeTime)
+	if (isCharging) /// Increases charge delay
+	{
+		spawnDelay += TIME.GetTickTimeSeconds();
+
+		if (spawnDelay >= spawnChargeTime)
 		{
-			reChargeDelay = 0;
+			spawnDelay = 0;
 			isCharging = false;
 			canAttack = true;
 		}
 	}
-	else if (isAttacking)
-		return;
-
-	if (isPossessed && !isAttacking && !isCharging && canAttack)
+	else if (isPossessed && !isAttacking && !isCharging && canAttack) /// Moves in player direction
 	{
-		Vector2<float> dir{ entityController->GetMovementDirection(1) };
+		dir = entityController->GetMovementDirection(playerID);
 		dir.y = 0;
-		ApplyPhysics(dir);
 	}
-	else if (!isAttacking && !isCharging && canAttack)
+	else if (!isAttacking && !isCharging && canAttack) /// AI move to player
 	{
-		const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
-		Vector2<float> dir{ player->currentPosition - currentPosition };
+		const std::shared_ptr<Entity>& player{ WORLD.GetPlayer() };
+		dir = player->GetPosition() - currentPosition;
 
 		dir.Normalise();
-		if (dir.y < 0 || !isGrounded)
-			dir.y = 0;
-		else
-			dir.y = std::round(dir.y);
+		dir.y = 0;
 
 		dir.x = std::round(dir.x);
-
-		ApplyPhysics(dir);
 	}
 	else
 	{
-		velocity = Vector2<float>(0, 0);
+		dir = Vector2<float>(0, 0);
 	}
+
+	ApplyPhysics(dir);
+
 }
 
 void Slime::Init(const Vector2<float>& argPosition, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage)
@@ -115,7 +116,7 @@ void Slime::Init(const Vector2<float>& argPosition, const ESide argSide, const V
 		return;
 	}
 
-	active = true;
+	SetActive(true);
 
 	Vector2<float> pos{ argPosition };
 	pos.y -= collisionBounds.bottom;
@@ -141,5 +142,5 @@ void Slime::ResetEntity()
 	canAttack = true;
 	isCharging = false;
 
-	reChargeDelay = 0;
+	spawnDelay = 0;
 }

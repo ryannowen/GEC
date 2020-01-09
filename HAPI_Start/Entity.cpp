@@ -5,6 +5,8 @@
 #include "World.h"
 
 size_t Entity::numOfEntities{ 0 };
+unsigned short Entity::numOfPlayers{ 0 };
+
 
 Entity::Entity(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds, const std::shared_ptr<Controller>& argController)
 	: spritePath(argSpritePath), spriteAnimData(argAnimData), collisionBounds(argCollisionBounds), entityController(argController)
@@ -21,7 +23,7 @@ void Entity::Init(const Vector2<float>& argPosition, const ESide argSide, const 
 		return;
 	}
 
-	active = true;
+	SetActive(true);
 
 	Vector2<float> pos{ argPosition };
 	pos.y -= collisionBounds.bottom;
@@ -35,9 +37,11 @@ void Entity::Init(const Vector2<float>& argPosition, const ESide argSide, const 
 	damage = argDamage;
 }
 
-void Entity::SwapControllerInput(std::shared_ptr<Entity> argEntity)
+void Entity::SwapControllerInput(Entity& argEntity)
 {
-	entityController->SwapInput(*argEntity->entityController);
+	entityController->SwapInput(*argEntity.entityController);
+	std::swap(playerID, argEntity.playerID);
+
 }
 
 bool Entity::CheckCollision(const Entity& argEntity) const
@@ -142,20 +146,23 @@ void Entity::Translate(Vector2<float>& argPosition)
 
 void Entity::ApplyPhysics(const Vector2<float> argDirection)
 {
+	/// Applies Movement
 	acceleration += (argDirection * speed) * TIME.GetTickTimeSeconds();
-
 	velocity += acceleration;
 
+	/// Clamps X velocity between maxSpeed
 	if (velocity.x > maxSpeed)
 		velocity.x = maxSpeed;
 	else if (velocity.x < -maxSpeed)
 		velocity.x = -maxSpeed;
 
+	/// Clamps Y velocity between maxSpeed
 	if (velocity.y > maxSpeed)
 		velocity.y = maxSpeed;
 	else if (velocity.y < -maxSpeed)
 		velocity.y = -maxSpeed;
 
+	/// Applies drag in opposite direction
 	if (static_cast<int>(velocity.x) != 0)
 	{
 		if (velocity.x > 0)
@@ -194,10 +201,10 @@ void Entity::ApplyPhysics(const Vector2<float> argDirection)
 		velocity.y += gravity * TIME.GetTickTimeSeconds();
 	}
 
+	/// Translates by velocity
 	Translate(velocity * TIME.GetTickTimeSeconds());
 
 	acceleration = Vector2<float>(0.0f, 0.0f);
-
 	isGrounded = false;
 }
 

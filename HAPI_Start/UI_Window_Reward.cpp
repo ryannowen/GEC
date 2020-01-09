@@ -2,7 +2,7 @@
 
 #include "UI_Button_Reward.h"
 
-void UI_Window_Reward::OnEnabled()
+void UI_Window_Reward::OnEnable()
 {
 	std::static_pointer_cast<UI_Button_Reward>(elements[0])->ChangeReward();
 	std::static_pointer_cast<UI_Button_Reward>(elements[1])->ChangeReward();

@@ -2,6 +2,8 @@
 
 #include "World.h"
 #include "Time.h"
+#include "Player_Opposing.h"
+#include "Audio.h"
 
 bool Sorcerer::Attack(const Vector2<float> argDirection)
 {
@@ -11,13 +13,17 @@ bool Sorcerer::Attack(const Vector2<float> argDirection)
 	Vector2<float> projSpeed(1000, 1000);
 	projSpeed *= argDirection;
 
+	/// Changes projectile spawn side
 	if (argDirection.x > 0)
 		attackPos.x = currentPosition.x + collisionBounds.right;
 	else
 		attackPos.x = currentPosition.x;
 
-	if (WORLD.SpawnEntity(ESpawnableEntities::eSorcererProjectile, attackPos, Vector2<float>(0, 0), entityController->GetSide(), projSpeed, 400, 0, attackDamage))
+	/// Spawns projectile
+	if (WORLD.SpawnEntity(ESpawnableEntities::eSorcererProjectile, attackPos, Vector2<float>(-50, -20), entityController->GetSide(), projSpeed, 400, 0, attackDamage))
 	{
+		AUDIO.PlaySound(attackSound);
+
 		canAttack = false;
 		isAttacking = true;
 
@@ -29,6 +35,8 @@ bool Sorcerer::Attack(const Vector2<float> argDirection)
 
 void Sorcerer::OnDeath()
 {
+	AUDIO.PlaySound(deathSound);
+
 	WORLD.IncreaseDefeatedEnemies();
 	WORLD.AddScore(30);
 }
@@ -44,21 +52,21 @@ void Sorcerer::OnAnimFinished()
 
 void Sorcerer::OnDisable()
 {
+	/// Stops being possessed
 	if (isPossessed)
 	{
-		isPossessed = false;
-		std::shared_ptr<Entity> opposingPlayer{ WORLD.GetOpposingPlayer() };
-
-		SwapControllerInput(opposingPlayer);
-		opposingPlayer->SetActive(true);
+		std::shared_ptr<Player_Opposing> opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
+		opposingPlayer->StopPossessing();
 	}
 
 	ResetEntity();
 }
 
-Sorcerer::Sorcerer(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds, const std::shared_ptr<Controller> argController)
+Sorcerer::Sorcerer(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds, const std::shared_ptr<Controller>& argController)
 	: Entity(argSpritePath, argAnimData, argCollisionBounds, argController)
 {
+	AUDIO.LoadSound(attackSound, HAPI_TSoundOptions(1));
+
 	isPossessable = true;
 	passable = true;
 	hasGravity = true;
@@ -72,16 +80,17 @@ void Sorcerer::Update()
 	if (WORLD.GetSceneState() != ESceneState::ePossession)
 		return;
 
-	entityController->Update(*this, 1);
+	/// Updates controller
+	entityController->Update(*this, playerID);
 	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
 
-	if (isCharging)
+	if (isCharging) // Increases charge delay
 	{
-		reChargeDelay += TIME.GetTickTimeSeconds();
+		spawnDelay += TIME.GetTickTimeSeconds();
 
-		if (reChargeDelay >= reChargeTime)
+		if (spawnDelay >= spawnChargeTime)
 		{
-			reChargeDelay = 0;
+			spawnDelay = 0;
 			isCharging = false;
 			canAttack = true;
 		}
@@ -96,7 +105,7 @@ void Sorcerer::Init(const Vector2<float>& argPosition, const ESide argSide, cons
 		return;
 	}
 
-	active = true;
+	SetActive(true);
 
 	Vector2<float> pos{ argPosition };
 	pos.y -= collisionBounds.bottom;
@@ -116,5 +125,5 @@ void Sorcerer::ResetEntity()
 	canAttack = true;
 	isCharging = false;
 
-	reChargeDelay = 0;
+	spawnDelay = 0;
 }

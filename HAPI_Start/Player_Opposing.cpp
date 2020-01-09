@@ -4,6 +4,7 @@
 
 #include "Time.h"
 #include "World.h"
+#include "Audio.h"
 
 void Player_Opposing::PlaceEntity()
 {
@@ -87,17 +88,64 @@ Player_Opposing::Player_Opposing(const std::string& argSpritePath, const Animati
 	entityController->SetKeyboardInput(argKeyboardMovementKeys);
 	entityController->SetControllerInput(argControllerMovementKeys);
 
+	playerID = 1;
+
 	hasCollision = false;
 	passable = true;
+
+	AUDIO.LoadSound(possessionSoundPath, HAPI_TSoundOptions(1));
 }
 
 void Player_Opposing::Update()
 {
-	entityController->Update(*this, 1);
+	entityController->Update(*this, playerID);
 
-	ApplyPhysics(entityController->GetMovementDirection(1));
+	ApplyPhysics(entityController->GetMovementDirection(playerID));
+
+	if (!canAction)
+	{
+		actionDelay += TIME.GetTickTimeSeconds();
+
+		if (actionDelay >= actionDelayTime)
+		{
+			actionDelay = 0;
+			canAction = true;
+		}
+	}
 }
 
 void Player_Opposing::Collided(Entity& argEntity)
 {
+}
+
+void Player_Opposing::StopPossessing()
+{
+	/// Checks if any entity is being possessed
+	if (possessingEntity == nullptr)
+		return;
+
+	possessingEntity->SwapControllerInput(*this);
+	possessingEntity->isPossessed = false;
+
+	possessingEntity = nullptr;
+
+	SetActive(true);
+}
+
+void Player_Opposing::BeginPossessing(Entity& argPossessing)
+{
+	if (possessingEntity != nullptr)
+	{
+		std::cerr << "ERROR: Trying to possess another entity when already possessing, argPossessEntityID=" << argPossessing.entityID << std::endl;
+	}
+
+	SwapControllerInput(argPossessing);
+	argPossessing.isPossessed = true;
+
+	possessingEntity = &argPossessing;
+
+	AUDIO.PlaySound(possessionSoundPath);
+
+
+	SetActive(false);
 }

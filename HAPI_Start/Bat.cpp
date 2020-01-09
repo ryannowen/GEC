@@ -2,7 +2,10 @@
 
 #include "World.h"
 #include "Time.h"
+#include "Audio.h"
+
 #include "Controller_Bat.h"
+#include "Player_Opposing.h"
 
 void Bat::Attack()
 {
@@ -14,6 +17,8 @@ void Bat::Attack()
 
 void Bat::OnDeath()
 {
+	AUDIO.PlaySound(deathSound);
+
 	WORLD.IncreaseDefeatedEnemies();
 	WORLD.AddScore(10);
 }
@@ -21,13 +26,11 @@ void Bat::OnDeath()
 
 void Bat::OnDisable()
 {
+	/// Stops being possessed
 	if (isPossessed)
 	{
-		isPossessed = false;
-		std::shared_ptr<Entity> opposingPlayer{ WORLD.GetOpposingPlayer() };
-
-		SwapControllerInput(opposingPlayer);
-		opposingPlayer->SetActive(true);
+		std::shared_ptr<Player_Opposing> opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
+		opposingPlayer->StopPossessing();
 	}
 
 	ResetEntity();
@@ -37,6 +40,8 @@ Bat::Bat(const std::string& argSpritePath, const AnimationData& argAnimData, con
 	: Entity(argSpritePath, argAnimData, argCollisionBounds, std::shared_ptr<Controller>(std::make_shared<Controller_Bat>()))
 
 {
+	AUDIO.LoadSound(deathSound, HAPI_TSoundOptions(1));
+
 	isPossessable = true;
 	passable = true;
 }
@@ -47,28 +52,29 @@ void Bat::Update()
 	if (WORLD.GetSceneState() != ESceneState::ePossession)
 		return;
 
-	entityController->Update(*this, 1);
+	/// Updates controller
+	entityController->Update(*this, playerID);
 	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
 
-	if (isCharging)
+	if (isCharging) /// Increases charge delay
 	{
-		reChargeDelay += TIME.GetTickTimeSeconds();
+		spawnDelay += TIME.GetTickTimeSeconds();
 
-		if (reChargeDelay >= reChargeTime)
+		if (spawnDelay >= spawnChargeTime)
 		{
-			reChargeDelay = 0;
+			spawnDelay = 0;
 			isCharging = false;
 			canAttack = true;
 		}
 	}
-	else if (isPossessed && !isCharging && canAttack)
+	else if (isPossessed && !isCharging && canAttack) /// Moves in player direction
 	{
-		ApplyPhysics(entityController->GetMovementDirection(1));
+		ApplyPhysics(entityController->GetMovementDirection(playerID));
 	}
-	else if (!isCharging && canAttack)
+	else if (!isCharging && canAttack)  /// AI move to player
 	{
-		const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
-		Vector2<float> dir{ player->currentPosition - currentPosition };
+		const std::shared_ptr<Entity>& player{ WORLD.GetPlayer() };
+		Vector2<float> dir{ player->GetPosition() - currentPosition };
 
 		dir.Normalise();
 
@@ -91,7 +97,7 @@ void Bat::Init(const Vector2<float>& argPosition, const ESide argSide, const Vec
 		return;
 	}
 
-	active = true;
+	SetActive(true);
 
 	Vector2<float> pos{ argPosition };
 	pos.y -= collisionBounds.bottom;
@@ -116,5 +122,5 @@ void Bat::ResetEntity()
 	canAttack = true;
 	isCharging = false;
 
-	reChargeDelay = 0;
+	spawnDelay = 0;
 }

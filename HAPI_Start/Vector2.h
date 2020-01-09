@@ -10,14 +10,19 @@ public:
 		: x(argX), y(argY)
 	{}
 
+	// Normalises/Unit vectorizes this vector
 	void Normalise()
 	{
+		if (static_cast<size_t>(x) == 0 && static_cast<size_t>(y) == 0)
+			return;
+
 		const float dot = Dot();
 
 		if(dot != 0)
 			*this /= sqrt(dot);
 	}
 
+	// Returns Dot product of vector
 	float Dot() const
 	{
 		return (x * x) + (y * y);

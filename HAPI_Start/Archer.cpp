@@ -2,8 +2,10 @@
 
 #include "World.h"
 #include "Time.h"
+#include "Audio.h"
 
 #include "Controller_Archer.h"
+#include "Player_Opposing.h"
 
 bool Archer::Attack(const Vector2<float> argDirection)
 {
@@ -13,14 +15,17 @@ bool Archer::Attack(const Vector2<float> argDirection)
 	Vector2<float> projSpeed(1000, 1000);
 	projSpeed *= argDirection;
 
+	/// Changes projectile spawn side
 	if (argDirection.x > 0)
 		attackPos.x = currentPosition.x + collisionBounds.right;
 	else
 		attackPos.x = currentPosition.x;
 	
-
+	/// Spawns projectile
 	if (WORLD.SpawnEntity(ESpawnableEntities::eArcherProjectile, attackPos, Vector2<float>(0,0), entityController->GetSide(),projSpeed, 400, 0, attackDamage))
 	{
+		AUDIO.PlaySound(attackSound);
+
 		canAttack = false;
 		isAttacking = true;
 
@@ -32,6 +37,8 @@ bool Archer::Attack(const Vector2<float> argDirection)
 
 void Archer::OnDeath()
 {
+	AUDIO.PlaySound(deathSound);
+
 	WORLD.IncreaseDefeatedEnemies();
 	WORLD.AddScore(50);
 }
@@ -47,13 +54,11 @@ void Archer::OnAnimFinished()
 
 void Archer::OnDisable()
 {
+	/// Stops being possessed
 	if (isPossessed)
 	{
-		isPossessed = false;
-		std::shared_ptr<Entity> opposingPlayer{ WORLD.GetOpposingPlayer() };
-
-		SwapControllerInput(opposingPlayer);
-		opposingPlayer->SetActive(true);
+		std::shared_ptr<Player_Opposing> opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
+		opposingPlayer->StopPossessing();
 	}
 
 	ResetEntity();
@@ -62,6 +67,8 @@ void Archer::OnDisable()
 Archer::Archer(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds)
 	: Entity(argSpritePath, argAnimData, argCollisionBounds, std::shared_ptr<Controller>(std::make_shared<Controller_Archer>()))
 {
+	AUDIO.LoadSound(attackSound, HAPI_TSoundOptions(1));
+
 	isPossessable = true;
 	passable = true;
 	hasGravity = true;
@@ -75,16 +82,17 @@ void Archer::Update()
 	if (WORLD.GetSceneState() != ESceneState::ePossession)
 		return;
 
-	entityController->Update(*this, 1);
+	/// Updates controller
+	entityController->Update(*this, playerID);
 	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
 
-	if (isCharging)
+	if (isCharging) /// Increases charge delay
 	{
-		reChargeDelay += TIME.GetTickTimeSeconds();
+		spawnDelay += TIME.GetTickTimeSeconds();
 
-		if (reChargeDelay >= reChargeTime)
+		if (spawnDelay >= spawnChargeTime)
 		{
-			reChargeDelay = 0;
+			spawnDelay = 0;
 			isCharging = false;
 			canAttack = true;
 		}
@@ -100,7 +108,7 @@ void Archer::Init(const Vector2<float>& argPosition, const ESide argSide, const 
 		return;
 	}
 
-	active = true;
+	SetActive(true);
 
 	Vector2<float> pos{ argPosition };
 	pos.y -= collisionBounds.bottom;
@@ -120,5 +128,5 @@ void Archer::ResetEntity()
 	canAttack = true;
 	isCharging = false;
 
-	reChargeDelay = 0;
+	spawnDelay = 0;
 }

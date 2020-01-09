@@ -37,7 +37,7 @@ using namespace HAPISPACE;
 void HAPI_Main()
 {
 	// Debug FPS
-	HAPI.SetShowFPS(true);
+	//HAPI.SetShowFPS(true);
 	//HAPI.LimitFrameRate(5);
 
 	/// Seeds PRNG

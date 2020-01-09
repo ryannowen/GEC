@@ -17,5 +17,5 @@ void UI_Text::DrawElement(const UI_Window& argWindow)
 	if (fontPath != std::string())
 		HAPI.ChangeFontFromFile(fontPath);
 
-	HAPI.RenderText(position.x + argWindow.position.x, position.y + argWindow.position.y, colour, text, size);
+	HAPI.RenderText(static_cast<int>(position.x + argWindow.position.x), static_cast<int>(position.y + argWindow.position.y), colour, text, size);
 }

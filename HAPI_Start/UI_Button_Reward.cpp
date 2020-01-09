@@ -18,7 +18,7 @@ void UI_Button_Reward::OnBeginClick(UI_Window& argWindow)
 
 void UI_Button_Reward::OnEndClick(UI_Window& argWindow)
 {
-	std::shared_ptr<Player> player{ std::static_pointer_cast<Player>(WORLD.GetPlayer()) };
+	std::shared_ptr<Player>& player{ std::static_pointer_cast<Player>(WORLD.GetPlayer()) };
 
 	switch (rewardType)
 	{

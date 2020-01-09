@@ -25,7 +25,7 @@ void UI_Interface::DrawWindows()
 	}
 }
 
-bool UI_Interface::CreateWindow(const std::string& argName, const std::shared_ptr<UI_Window> argWindow)
+bool UI_Interface::CreateWindow(const std::string& argName, const std::shared_ptr<UI_Window>& argWindow)
 {
 	if (windowMap.find(argName) != windowMap.end())
 	{

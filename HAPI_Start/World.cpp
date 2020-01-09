@@ -11,22 +11,32 @@
 #include "Player.h"
 #include "Player_Opposing.h"
 #include "Tile.h"
-#include "Projectile.h"
 #include "TriggerBox.h"
 #include "Archer.h"
+
 #include "Slime.h"
 #include "Slime_Explosive.h"
+#include "Slime_Slimeling.h"
+#include "Slime_Boss.h"
+
 #include "Bat.h"
+
 #include "Sorcerer.h"
+#include "Sorcerer_Boss.h"
+
+#include "Projectile.h"
 #include "Projectile_Fireball.h"
+
 #include "Explosion.h"
 #include "Possession.h"
 
+/// UI
 #include "UI_Window_HUD.h"
 #include "UI_Window_MainMenu.h"
 #include "UI_Window_PauseMenu.h"
 #include "UI_Window_ScoreScreen.h"
 #include "UI_Window_Reward.h"
+#include "UI_Window_EndScreen.h"
 
 
 
@@ -36,17 +46,33 @@ World::World()
 {
 	RENDERER.CreateWindow(Vector2<int>(1600, 900), "Ryan Robson T7091365");
 
-	UI.CreateWindow("HUD", std::static_pointer_cast<UI_Window>(std::make_shared<UI_Window_HUD>(Vector2<float>(0, 0))));
-	UI.CreateWindow("MainMenu", std::static_pointer_cast<UI_Window>(std::make_shared<UI_Window_MainMenu>(Vector2<float>(0, 0))));
-	UI.SetWindowActive("MainMenu", true);
-
-	UI.CreateWindow("PauseMenu", std::static_pointer_cast<UI_Window>(std::make_shared<UI_Window_PauseMenu>(Vector2<float>(0, 0))));
-	UI.CreateWindow("ScoreScreen", std::static_pointer_cast<UI_Window>(std::make_shared<UI_Window_ScoreScreen>(Vector2<float>(0, 0))));
-	UI.CreateWindow("RewardScreen", std::static_pointer_cast<UI_Window>(std::make_shared<UI_Window_Reward>(Vector2<float>(0, 0))));
-
+	/// Loads Game Data
 	LoadScenes();
 	LoadGameData();
-	AUDIO;
+
+	/// Creates UI
+	UI.CreateWindow("HUD", std::make_shared<UI_Window_HUD>(Vector2<float>(0, 0)));
+	UI.CreateWindow("MainMenu", std::make_shared<UI_Window_MainMenu>(Vector2<float>(0, 0)));
+	UI.SetWindowActive("MainMenu", true);
+
+	UI.CreateWindow("PauseMenu", std::make_shared<UI_Window_PauseMenu>(Vector2<float>(0, 0)));
+	UI.CreateWindow("ScoreScreen", std::make_shared<UI_Window_ScoreScreen>(Vector2<float>(0, 0)));
+	UI.CreateWindow("RewardScreen", std::make_shared<UI_Window_Reward>(Vector2<float>(0, 0)));
+	UI.CreateWindow("EndScreen", std::make_shared<UI_Window_EndScreen>(Vector2<float>(0, 0)));
+}
+
+void World::CreateEntity(const std::string& argSceneName, std::shared_ptr<Entity>& argEntity, const bool argHasAlpha)
+{
+	if (scenes.find(argSceneName) == scenes.end())
+	{
+		std::cerr << "ERROR: Couldn't find specified scene" << std::endl;
+		return;
+	}
+	else
+	{
+		/// Adds entity to scene vector
+		scenes.find(argSceneName)->second->CreateEntity(argEntity, argHasAlpha, argEntity->spriteAnimData.GetSpriteSheetSize());
+	}
 }
 
 void World::Update()
@@ -66,8 +92,8 @@ void World::Update()
 		}
 
 		/// Gets Scenes
-		std::shared_ptr<Scene> globalScene{ GetScene("Global") };
-		std::shared_ptr<Scene> currentScene{ GetScene(currentSceneName) };
+		std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
+		std::shared_ptr<Scene>& currentScene{ GetScene(currentSceneName) };
 
 		const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
@@ -94,9 +120,9 @@ void World::Update()
 			/// Camera
 			/// 1568 is the 1600 screen final tile
 			float CameraArea{ currentScene->GetLevelLength() - 1568.0f };
-			std::shared_ptr<Entity> player{ GetPlayer() };
-			if (((player->currentPosition.x) > 800 - CameraArea) && ((player->currentPosition.x) < 800 + CameraArea))
-				cameraOffset = player->currentPosition.x - 800;
+			Vector2<float> playerPosition{ GetPlayer()->GetPosition() };
+			//if (((player->currentPosition.x) > 800 - CameraArea) && ((player->currentPosition.x) < 800 + CameraArea))
+				cameraOffset = playerPosition.x - 800;
 
 
 			if (cameraOffset < 0)
@@ -114,23 +140,6 @@ void World::Update()
 
 		currentScene->DrawScene(interp, cameraOffset);
 		globalScene->DrawScene(interp, cameraOffset);
-
-		////////////////// TODO Remove
-		if (keyboardData.scanCode[HK_NUMPAD1] && !changed)
-		{
-			changed = true;
-			NextScene();
-		}
-		else if (keyboardData.scanCode[HK_NUMPAD2])
-			changed = false;
-
-		globalScene->entities[previewTile1Index]->spriteAnimData.currentSpriteCells = std::static_pointer_cast<Player>(GetPlayer())->cellLoc;
-		globalScene->entities[previewTile2Index]->spriteAnimData.currentSpriteCells = std::static_pointer_cast<Player>(GetPlayer())->cellLoc;
-
-		//HAPI.RenderText(10, 10, HAPI_TColour::RED, std::string("Cell Loc: X=" + std::to_string(std::static_pointer_cast<Player>(entities[3])->cellLoc.x)).append("  Y=" + std::to_string(std::static_pointer_cast<Player>(entities[3])->cellLoc.y)));
-		//HAPI.RenderText(10, 10, HAPI_TColour::RED, std::string("Current Stage : ").append((static_cast<int>(sceneState) == 0) ? "None" : ((static_cast<int>(sceneState) == 1) ? "Placement" : "Possession")));
-		//HAPI.RenderText(10, 20, HAPI_TColour::RED, std::string("Current Placement : ").append((static_cast<int>(std::static_pointer_cast<Player_Opposing>(GetOpposingPlayer())->currentPlacement) == 0) ? "Slime" : "Explosive Slime"));
-		///////////////////
 		
 
 		AUDIO.Update();
@@ -142,13 +151,13 @@ void World::Update()
 
 void World::SwitchPlayers()
 {
-	std::shared_ptr<Scene> globalScene{ GetScene("Global") };
+	std::shared_ptr<Entity>& player{ GetPlayer() };
 
-	std::shared_ptr<Entity> player{ globalScene->entities[playerIndex] };
-	const std::shared_ptr<Entity> opposingPlayer{ globalScene->entities[opposingPlayerIndex] };
+	std::shared_ptr<Player_Opposing> opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
+	opposingPlayer->StopPossessing();
+
+	player->SwapControllerInput(*opposingPlayer);
 	
-	player->SwapControllerInput(opposingPlayer);
-
 	if (player->GetSpritePath() == "Data//Player1.png")
 	{
 		player->SetSpritePath("Data//Player2.png");
@@ -159,13 +168,14 @@ void World::SwitchPlayers()
 	}
 }
 
-bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float> argPosition, const Vector2<float> argPositionOffset, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage)
+bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float> argPosition, const Vector2<float> argPositionOffset, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage, Entity** argPlacedEntityRef)
 {
-	std::shared_ptr<Scene> globalScene{ GetScene("Global") };
+	std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
 
 
 	int numOfEntites{ 0 };
 	size_t entityIndex{ 0 };
+	bool ignoreActive{ false };
 
 	switch (argEntity)
 	{
@@ -177,6 +187,11 @@ bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float>
 	case ESpawnableEntities::eSlime_Explosive:
 		numOfEntites = numOfExplosiveSlimes;
 		entityIndex = explosiveSlimeIndex;
+		break;
+
+	case ESpawnableEntities::eSlime_Slimeling:
+		numOfEntites = numOfSlimelingSlimes;
+		entityIndex = SlimelingIndex;
 		break;
 		
 	case ESpawnableEntities::eArcher:
@@ -230,13 +245,9 @@ bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float>
 		break;
 		
 	case ESpawnableEntities::ePossession:
+		ignoreActive = true;
 		numOfEntites = 1;
 		entityIndex = possessionIndex;
-		break;
-
-	case ESpawnableEntities::ePlayer:
-		numOfEntites = 1;
-		entityIndex = playerIndex;
 		break;
 		
 	default:
@@ -248,65 +259,46 @@ bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float>
 
 	for (int i = 0; i < numOfEntites; i++)
 	{
-		if (!globalScene->entities[static_cast<size_t>(entityIndex) + i]->GetActive())
+		if (!globalScene->entities[static_cast<size_t>(entityIndex) + i]->GetActive() || ignoreActive)
 		{
 			int health{ argHealth };
 			if (health != 0)
 				health += static_cast<int>(difficulty);
 
-			globalScene->entities[static_cast<size_t>(entityIndex) + i]->Init(argPosition - argPositionOffset, argSide, argSpeed, argMaxSpeed, health, argDamage);
+			std::shared_ptr<Entity> entity{ globalScene->entities[static_cast<size_t>(entityIndex) + i] };
+			entity->Init(argPosition - argPositionOffset, argSide, argSpeed, argMaxSpeed, health, argDamage);
+			
+			if(argPlacedEntityRef != nullptr)
+				(*argPlacedEntityRef) = &(*entity);
+
 			return true;
 		}
 	}
 
 
 
-	std::cerr << "Trying to spawn entity but all are active" << std::endl;
+	std::cerr << "Trying to spawn entity but all are active enumSpawnableEntitiesID=" << static_cast<int>(argEntity) << std::endl;
 	return false;
 }
 
 
 void World::SpawnMiniBoss()
 {
-	std::shared_ptr<Scene> globalScene{ GetScene("Global") };
+	std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
 
-	for (int i = 0; i < numOfBossess; i++)
-	{
-		if (!globalScene->entities[bossIndex + i]->GetActive())
-		{
-			globalScene->entities[bossIndex + i]->Init(Vector2<float>(768, 600), ESide::ePlayerBoss, Vector2<float>(200, 200), 200, 5 + static_cast<int>(difficulty), 4 );
-			return;
-		}
-	}
+	size_t boss{ bossIndex + rand() % numOfBosses };
+	globalScene->entities[boss]->Init(Vector2<float>(736, 696), ESide::ePlayerBoss, Vector2<float>(200, 200), 200, 5 + static_cast<int>(difficulty), 4 );
 }
 
 void World::SpawnBoss()
 {
-	std::shared_ptr<Scene> globalScene{ GetScene("Global") };
+	std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
 
-	for (int i = 0; i < numOfBossess; i++)
-	{
-		if (!globalScene->entities[bossIndex + i]->GetActive())
-		{
-			globalScene->entities[bossIndex + i]->Init(Vector2<float>(768, 600), ESide::ePlayerBoss, Vector2<float>(500, 7500), 500, 10 + static_cast<int>(difficulty), 6);
-			return;
-		}
-	}
+	size_t boss{ bossIndex + rand() % numOfBosses };
+	globalScene->entities[boss]->Init(Vector2<float>(736, 696), ESide::ePlayerBoss, Vector2<float>(500, 7500), 500, 10 + static_cast<int>(difficulty), 6);
 }
 
-void World::CreateEntity(const std::string& argSceneName, std::shared_ptr<Entity>& argEntity, const bool argHasAlpha)
-{
-	if (scenes.find(argSceneName) == scenes.end())
-	{
-		std::cerr << "ERROR: Couldn't find specified scene" << std::endl;
-		return;
-	}
-	else
-	{
-		/// Adds entity to scene vector
-		scenes.find(argSceneName)->second->CreateEntity(argEntity, argHasAlpha, argEntity->spriteAnimData.GetSpriteSheetSize());
-	}
-}
+
 
 void World::PlaceEntity(const ESpawnableEntities argEnemyType, const Vector2<float> argPosition)
 {
@@ -379,7 +371,7 @@ void World::PlaceEntity(const ESpawnableEntities argEnemyType, const Vector2<flo
 
 		if (placedEnemies >= maxPlaceEnemies)
 		{
-			GetPlayer()->currentPosition = playerSpawn;
+			GetPlayer()->SetPosition(playerSpawn);
 			GetPlayer()->SetActive(true);
 			sceneState = ESceneState::ePossession;
 		}
@@ -420,7 +412,7 @@ bool World::LoadScenes()
 	/// Creates global scene
 	scenes["Global"] = std::make_shared<Scene>("Global", 0, ESceneType::eNone);
 
-	std::shared_ptr<Scene> globalScene{ GetScene("Global") };
+	std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
 
 	/// Creates Magic Explosions Pool
 	for (int i = 0; i < numOfMagicExplosions; i++)
@@ -428,7 +420,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			magicExplosionIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> explosion{ std::static_pointer_cast<Entity>(std::make_shared<Explosion>("Data//MagicExplosion.png", AnimationData(Vector2<unsigned int>(61, 1), std::vector<float>{0.01f}, std::vector<unsigned int>{61}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true))) };
+		std::shared_ptr<Entity> explosion{ std::make_shared<Explosion>("Data//MagicExplosion.png", AnimationData(Vector2<unsigned int>(61, 1), std::vector<float>{0.01f}, std::vector<unsigned int>{61}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true)) };
 		CreateEntity("Global", explosion, true);
 	}
 
@@ -438,7 +430,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			fireExplosionIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> explosion{ std::static_pointer_cast<Entity>(std::make_shared<Explosion>("Data//FireExplosion.png", AnimationData(Vector2<unsigned int>(61, 1), std::vector<float>{0.01f}, std::vector<unsigned int>{61}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true))) };
+		std::shared_ptr<Entity> explosion{ std::make_shared<Explosion>("Data//FireExplosion.png", AnimationData(Vector2<unsigned int>(61, 1), std::vector<float>{0.01f}, std::vector<unsigned int>{61}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true)) };
 		CreateEntity("Global", explosion, true);
 	}
 
@@ -448,7 +440,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			FlamesIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> flame{ std::static_pointer_cast<Entity>(std::make_shared<Explosion>("Data//Flame.png", AnimationData(Vector2<unsigned int>(47, 1), std::vector<float>{0.1f}, std::vector<unsigned int>{61}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle(21, 0, 50, 0))) };
+		std::shared_ptr<Entity> flame{ std::make_shared<Explosion>("Data//Flame.png", AnimationData(Vector2<unsigned int>(47, 1), std::vector<float>{0.1f}, std::vector<unsigned int>{61}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle(21, 0, 50, 0)) };
 		CreateEntity("Global", flame, true);
 	}
 
@@ -458,7 +450,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			playerProjectileIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> initialProjectile{ std::static_pointer_cast<Entity>(std::make_shared<Projectile>("Data//PlayerAttack.png", AnimationData(Vector2<unsigned int>(3, 1), std::vector<float>{0.55f}, std::vector<unsigned int>{3}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle{38, 7, 13, 4})) };
+		std::shared_ptr<Entity> initialProjectile{ std::make_shared<Projectile>("Data//PlayerAttack.png", AnimationData(Vector2<unsigned int>(3, 1), std::vector<float>{0.55f}, std::vector<unsigned int>{3}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle{38, 7, 13, 4}) };
 		CreateEntity("Global", initialProjectile, true);
 	}
 
@@ -468,7 +460,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			ArcherProjectileIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> initialProjectile{ std::static_pointer_cast<Entity>(std::make_shared<Projectile>("Data//Arrow.png", AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{2}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle{50, 15, 5, 3})) };
+		std::shared_ptr<Entity> initialProjectile{ std::make_shared<Projectile>("Data//Arrow.png", AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{2}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle{50, 15, 5, 3}) };
 		CreateEntity("Global", initialProjectile, true);
 	}
 
@@ -478,7 +470,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			SorcererProjectileIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> initialProjectile{ std::static_pointer_cast<Entity>(std::make_shared<Projectile_Fireball>("Data//FireBall.png", AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{2}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle{10, 0, 10, 0})) };
+		std::shared_ptr<Entity> initialProjectile{ std::make_shared<Projectile_Fireball>("Data//FireBall.png", AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{2}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0), true), Rectangle{10, 0, 10, 0}) };
 		CreateEntity("Global", initialProjectile, true);
 	}
 
@@ -488,7 +480,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			ArcherIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> archer{ std::static_pointer_cast<Entity>(std::make_shared<Archer>("Data//Archer.png", AnimationData(Vector2<unsigned int>(12, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{2, 2, 12, 12, 6, 6}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{58, 0, 61, 0})) };
+		std::shared_ptr<Entity> archer{ std::make_shared<Archer>("Data//Archer.png", AnimationData(Vector2<unsigned int>(12, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{2, 2, 12, 12, 6, 6}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{58, 0, 61, 0}) };
 		CreateEntity("Global", archer, true);
 	}
 
@@ -498,7 +490,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			slimeIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> slime{ std::static_pointer_cast<Entity>(std::make_shared<Slime>("Data//Slime_Grey.png", AnimationData(Vector2<unsigned int>(5, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{4, 4, 4, 4, 5, 5}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{60, 0, 45, 0})) };
+		std::shared_ptr<Entity> slime{ std::make_shared<Slime>("Data//Slime_Grey.png", AnimationData(Vector2<unsigned int>(5, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{4, 4, 4, 4, 5, 5}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{60, 0, 45, 0}) };
 		CreateEntity("Global", slime, true);
 	}
 
@@ -508,8 +500,18 @@ bool World::LoadScenes()
 		if (i == 0)
 			explosiveSlimeIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> explosiveSlime{ std::static_pointer_cast<Entity>(std::make_shared<Slime_Explosive>("Data//Slime_Pink.png", AnimationData(Vector2<unsigned int>(5, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{4, 4, 4, 4, 5, 5}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{60, 0, 45, 0})) };
+		std::shared_ptr<Entity> explosiveSlime{ std::make_shared<Slime_Explosive>("Data//Slime_Pink.png", AnimationData(Vector2<unsigned int>(5, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{4, 4, 4, 4, 5, 5}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{60, 0, 45, 0}) };
 		CreateEntity("Global", explosiveSlime, true);
+	}
+
+	/// Creates Slimeling Pool
+	for (int i = 0; i < numOfSlimelingSlimes; i++)
+	{
+		if (i == 0)
+			SlimelingIndex = globalScene->entities.size();
+
+		std::shared_ptr<Entity> slimelingSlime{ std::make_shared<Slime_Slimeling>("Data//Slime_Slimeling.png", AnimationData(Vector2<unsigned int>(5, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{4, 4, 4, 4, 5, 5}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{60, 0, 45, 0}) };
+		CreateEntity("Global", slimelingSlime, true);
 	}
 
 	/// Creates Bat Pool
@@ -518,7 +520,7 @@ bool World::LoadScenes()
 		if (i == 0)
 			BatIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> bat{ std::static_pointer_cast<Entity>(std::make_shared<Bat>("Data//Bat.png", AnimationData(Vector2<unsigned int>(4, 2), std::vector<float>{0.1f, 0.1f}, std::vector<unsigned int>{4, 4}, std::vector<bool>{true, true}, Vector2<unsigned int>(0, 0), true), Rectangle{44, 0, 44, 0})) };
+		std::shared_ptr<Entity> bat{ std::make_shared<Bat>("Data//Bat.png", AnimationData(Vector2<unsigned int>(4, 2), std::vector<float>{0.1f, 0.1f}, std::vector<unsigned int>{4, 4}, std::vector<bool>{true, true}, Vector2<unsigned int>(0, 0), true), Rectangle{44, 0, 44, 0}) };
 		CreateEntity("Global", bat, true);
 	}
 
@@ -528,59 +530,64 @@ bool World::LoadScenes()
 		if (i == 0)
 			SorcererIndex = globalScene->entities.size();
 
-		std::shared_ptr<Entity> sorcerer{ std::static_pointer_cast<Entity>(std::make_shared<Sorcerer>("Data//Sorcerer.png", AnimationData(Vector2<unsigned int>(6, 6), std::vector<float>{0.2f, 0.2f, 0.2f, 0.2f, 0.15f, 0.15f}, std::vector<unsigned int>{3, 3, 3, 3, 6, 6}, std::vector<bool>{true, true, false, false, false, false}, Vector2<unsigned int>(0, 0), true), Rectangle{90, 0, 180, 0})) };
+		std::shared_ptr<Entity> sorcerer{ std::make_shared<Sorcerer>("Data//Sorcerer.png", AnimationData(Vector2<unsigned int>(6, 6), std::vector<float>{0.2f, 0.2f, 0.2f, 0.2f, 0.15f, 0.15f}, std::vector<unsigned int>{3, 3, 3, 3, 6, 6}, std::vector<bool>{true, true, false, false, false, false}, Vector2<unsigned int>(0, 0), true), Rectangle{90, 0, 180, 0}, std::make_shared<Controller_Sorcerer>()) };
 		CreateEntity("Global", sorcerer, true);
 	}
 
-	// TODO REMOVE
+
 	previewTile1Index = globalScene->entities.size();
-	std::shared_ptr<Entity> previewTile{ std::static_pointer_cast<Entity>(std::make_shared<Tile>("Data//Assets_Fast.png", AnimationData(Vector2<unsigned int>(8, 9), std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0),  false), Rectangle(32, 0, 32, 0))) };
+	std::shared_ptr<Entity> previewTile{ std::make_shared<Tile>("Data//Assets_Fast.png", AnimationData(Vector2<unsigned int>(8, 9), std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0),  false), Rectangle(32, 0, 32, 0)) };
 	CreateEntity("Global", previewTile, true);
-	previewTile->Init(Vector2<float>(0, 32), ESide::eEnvironment, Vector2<float>(0, 0), 0, 0, 0);
+	//previewTile->Init(Vector2<float>(0, 32), ESide::eEnvironment, Vector2<float>(0, 0), 0, 0, 0);
 
 	previewTile2Index = globalScene->entities.size();
-	std::shared_ptr<Entity> previewTile2{ std::static_pointer_cast<Entity>(std::make_shared<Tile>("Data//Assets_Alpha.png", AnimationData(Vector2<unsigned int>(7, 8), std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0),  false), Rectangle(32, 0, 32, 0))) };
+	std::shared_ptr<Entity> previewTile2{ std::make_shared<Tile>("Data//Assets_Alpha.png", AnimationData(Vector2<unsigned int>(7, 8), std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0),  false), Rectangle(32, 0, 32, 0)) };
 	CreateEntity("Global", previewTile2, true);
-	previewTile2->Init(Vector2<float>(32, 32), ESide::eEnvironment, Vector2<float>(0, 0), 0, 0, 0);
-	/////////////
+	//previewTile2->Init(Vector2<float>(32, 32), ESide::eEnvironment, Vector2<float>(0, 0), 0, 0, 0);
 
 	/// Player1
 	playerIndex = globalScene->entities.size();
-	std::shared_ptr<Entity> player1{ std::static_pointer_cast<Entity>(std::make_shared<Player>("Data//Player1.png", AnimationData(Vector2<unsigned int>(9, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f}, std::vector<unsigned int>{5, 5, 6, 6, 9, 9}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{66, 35, 50, 1}, player1KeyboardInput, controllerInput)) };
+	std::shared_ptr<Entity> player1{ std::make_shared<Player>("Data//Player1.png", AnimationData(Vector2<unsigned int>(9, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f}, std::vector<unsigned int>{5, 5, 6, 6, 9, 9}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{66, 35, 50, 1}, player1KeyboardInput, controllerInput) };
 	CreateEntity("Global", player1, true);
 	player1->Init(playerSpawn, ESide::ePlayerCharacter, Vector2<float>(200, 7500), 400, 10, 1);
 	player1->SetActive(false);
 
 	/// Player2
 	opposingPlayerIndex = globalScene->entities.size();
-	std::shared_ptr<Entity> player2{ std::static_pointer_cast<Entity>(std::make_shared<Player_Opposing>("Data//Crosshair.png", AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{0}, std::vector<unsigned int>{1}, std::vector<bool>{0}, Vector2<unsigned int>(0, 0), false), Rectangle{0, 0, 0, 0}, player2KeyboardInput, controllerInput)) };
+	std::shared_ptr<Entity> player2{ std::make_shared<Player_Opposing>("Data//Crosshair.png", AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{0}, std::vector<unsigned int>{1}, std::vector<bool>{0}, Vector2<unsigned int>(0, 0), false), Rectangle{0, 0, 0, 0}, player2KeyboardInput, controllerInput) };
 	CreateEntity("Global", player2, true);
-	player2->Init(Vector2<float>(500, 700), ESide::ePlayerBoss, Vector2<float>(350, 350), 500, 0, 0);
+	player2->Init(Vector2<float>(500, 700), ESide::eNeutral, Vector2<float>(350, 350), 500, 0, 0);
 	player2->SetActive(false);
 
 	/// Vortex
 	vortexIndex = globalScene->entities.size();
-	std::shared_ptr<Entity> vortex{ std::static_pointer_cast<Entity>(std::make_shared<Vortex>("Data//vortex.png", AnimationData(Vector2<unsigned int>(61, 1), std::vector<float>{0.025f}, std::vector<unsigned int>{61}, std::vector<bool>{true}, Vector2<unsigned int>(0, 0), true), Rectangle{100, 0, 100, 0})) };
+	std::shared_ptr<Entity> vortex{ std::make_shared<Vortex>("Data//vortex.png", AnimationData(Vector2<unsigned int>(61, 1), std::vector<float>{0.025f}, std::vector<unsigned int>{61}, std::vector<bool>{true}, Vector2<unsigned int>(0, 0), true), Rectangle{100, 0, 100, 0}) };
 	CreateEntity("Global", vortex, true);
 
 	/// Possession
 	possessionIndex = globalScene->entities.size();
-	std::shared_ptr<Entity> possession{ std::static_pointer_cast<Entity>(std::make_shared<Possession>()) };
+	std::shared_ptr<Entity> possession{ std::make_shared<Possession>() };
 	CreateEntity("Global", possession, false);
 
 
 	/// Bossess
 	bossIndex = globalScene->entities.size();
-	std::shared_ptr<Entity> archerBoss{ std::static_pointer_cast<Entity>(std::make_shared<Archer>("Data//Archer_Boss.png", AnimationData(Vector2<unsigned int>(12, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f}, std::vector<unsigned int>{2, 2, 12, 12, 6, 6}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{116, 0, 122, 0})) };
-	CreateEntity("Global", archerBoss, true);
-	numOfBossess++;
-
-	std::shared_ptr<Entity> batBoss{ std::static_pointer_cast<Entity>(std::make_shared<Bat>("Data//Bat_Boss.png", AnimationData(Vector2<unsigned int>(4, 2), std::vector<float>{0.2f, 0.2f}, std::vector<unsigned int>{4, 4}, std::vector<bool>{true, true}, Vector2<unsigned int>(0, 0), true), Rectangle{88, 0, 88, 0})) };
+	std::shared_ptr<Entity> batBoss{ std::make_shared<Bat>("Data//Bat_Boss.png", AnimationData(Vector2<unsigned int>(4, 2), std::vector<float>{0.2f, 0.2f}, std::vector<unsigned int>{4, 4}, std::vector<bool>{true, true}, Vector2<unsigned int>(0, 0), true), Rectangle{88, 0, 88, 0}) };
 	CreateEntity("Global", batBoss, true);
-	numOfBossess++;
+
+	std::shared_ptr<Entity> slimeBoss{ std::make_shared<Slime_Boss>("Data//Slime_Boss.png", AnimationData(Vector2<unsigned int>(4, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.15f, 0.15f}, std::vector<unsigned int>{4, 4, 4, 4, 3, 3}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{64, 0, 50, 0}) };
+	CreateEntity("Global", slimeBoss, true);
+
+	std::shared_ptr<Entity> archerBoss{ std::make_shared<Archer>("Data//Archer_Boss.png", AnimationData(Vector2<unsigned int>(12, 6), std::vector<float>{0.1f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f}, std::vector<unsigned int>{2, 2, 12, 12, 6, 6}, std::vector<bool>{true, true, false, false, false, false }, Vector2<unsigned int>(0, 0), true), Rectangle{116, 0, 122, 0}) };
+	CreateEntity("Global", archerBoss, true);
+
+	std::shared_ptr<Entity> sorcererBoss{ std::make_shared<Sorcerer_Boss>("Data//Sorcerer_Boss.png", AnimationData(Vector2<unsigned int>(6, 6), std::vector<float>{0.2f, 0.2f, 0.2f, 0.2f, 0.1f, 0.1f}, std::vector<unsigned int>{3, 3, 3, 3, 6, 6}, std::vector<bool>{true, true, false, false, false, false}, Vector2<unsigned int>(0, 0), true), Rectangle{135, 0, 270, 0}) };
+	CreateEntity("Global", sorcererBoss, true);
+
+	numOfBosses = globalScene->entities.size() - bossIndex;
 	
 	/// Loads Level from file
-	level = std::make_shared<CHapiXML>("Data//Scenes.xml");
+	std::shared_ptr<CHapiXML> level = std::make_shared<CHapiXML>("Data//Scenes.xml");
 	if (!level->HasData())
 		return false;
 	
@@ -599,12 +606,12 @@ bool World::LoadScenes()
 		scenes[sceneName] = std::make_shared<Scene>(sceneName, sceneAttributes[2].AsInt(), static_cast<ESceneType>(sceneAttributes[3].AsInt()));
 
 		/// Creates background for scene
-		std::shared_ptr<Entity> background{ std::static_pointer_cast<Entity>(std::make_shared<Tile>(sceneAttributes[1].AsString(), AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0),  false))) };
+		std::shared_ptr<Entity>& background{ std::static_pointer_cast<Entity>(std::make_shared<Tile>(sceneAttributes[1].AsString(), AnimationData(Vector2<unsigned int>(1, 1), std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, Vector2<unsigned int>(0, 0),  false))) };
 		CreateEntity(sceneName, background, false);
 		background->Init(Vector2<float>(0, 0), ESide::eNeutral, Vector2<float>(0, 0), 0, 0, 0);
 
 		/// Spawns tiles in scene
-		std::shared_ptr<Scene> currentScene{ GetScene(sceneName) };
+		std::shared_ptr<Scene>& currentScene{ GetScene(sceneName) };
 		const std::vector<CHapiXMLNode*>& children{ scene->GetChildren() };
 		for (const CHapiXMLNode* tile : children)
 		{
@@ -650,15 +657,17 @@ void World::ChangeScene(const ESceneType argSceneType)
 
 void World::NextScene()
 {
-	std::shared_ptr<Entity> player{ GetPlayer() };
-	std::shared_ptr<Entity> opposingPlayer{ GetOpposingPlayer() };
+	std::shared_ptr<Entity>& player{ GetPlayer() };
+	std::shared_ptr<Entity>& opposingPlayer{ GetOpposingPlayer() };
+
+	player->SetPosition(playerSpawn);
 
 	if (finalBoss) /// If final boss has been defeated, go to score screen
 	{
 		player->SetActive(false);
 		opposingPlayer->SetActive(false);
 		ChangeScene(ESceneType::eUI);
-		ChangeWorldState(EWorldState::eScoreScreen);
+		ChangeWorldState(EWorldState::eEndScreen);
 		SaveGameData();
 		ResetGame();
 		return;
@@ -677,7 +686,7 @@ void World::NextScene()
 		return;
 	}
 
-	const std::shared_ptr<Scene> currentScene{ GetScene(currentSceneName) };
+	const std::shared_ptr<Scene>& currentScene{ GetScene(currentSceneName) };
 
 	switch (currentScene->GetSceneType())
 	{
@@ -694,7 +703,6 @@ void World::NextScene()
 		break;
 
 	case ESceneType::eReward:
-		player->SetActive(true);
 		opposingPlayer->SetActive(true);
 		sceneState = ESceneState::ePlacement;
 		ChangeScene(ESceneType::eTransition);
@@ -703,7 +711,6 @@ void World::NextScene()
 
 	case ESceneType::eTransition:
 		opposingPlayer->SetActive(true);
-		player->currentPosition = playerSpawn;
 		defatedEnemies = 0;
 		placedEnemies = 1;
 		maxPlaceEnemies++;
@@ -733,24 +740,35 @@ void World::ChangeWorldState(const EWorldState argState)
 		UI.HideAllWindows();
 		UI.SetWindowActive("HUD", true);
 		break;
+
 	case EWorldState::eMainMenu:
 		UI.HideAllWindows();
 		UI.SetWindowActive("MainMenu", true);
 		break;
+
 	case EWorldState::ePauseMenu:
 		UI.SetWindowActive("PauseMenu", true);
 		break;
+
 	case EWorldState::eQuit:
 		HAPI.Close();
 		break;
+
 	case EWorldState::eScoreScreen:
 		UI.HideAllWindows();
 		UI.SetWindowActive("ScoreScreen", true);
 		break;
+
 	case EWorldState::eRewardScreen:
 		UI.HideAllWindows();
 		UI.SetWindowActive("RewardScreen", true);
 		break;
+
+	case EWorldState::eEndScreen:
+		UI.HideAllWindows();
+		UI.SetWindowActive("EndScreen", true);
+		break;
+
 	default:
 		std::cerr << "ERROR: Trying to change world state but case is not specified" << std::endl;
 		return;
@@ -758,7 +776,6 @@ void World::ChangeWorldState(const EWorldState argState)
 	}
 
 	worldState = argState;
-
 }
 
 void World::ResetGame()
@@ -781,7 +798,12 @@ void World::IncreaseDefeatedEnemies()
 
 	if (defatedEnemies >= placedEnemies)
 	{
-		SpawnEntity(ESpawnableEntities::eVortex, Vector2<float>(768, 672), Vector2<float>(0, 0), ESide::eEnvironment);
+		Vector2<float> vortexPosition(768, 672);
+
+		if (GetScene()->GetSceneType() == ESceneType::eTransition)
+			vortexPosition = Vector2<float>(1664, 704);
+
+		SpawnEntity(ESpawnableEntities::eVortex, vortexPosition, Vector2<float>(0, 0), ESide::eEnvironment);
 	}
 }
 
@@ -798,7 +820,11 @@ void World::ChangeDifficulty()
 void World::SaveGameData()
 {
 	if (score > highScore)
+	{
 		highScore = score;
+		hasNewHighScore = true;
+	}
+
 
 	std::ofstream file("Data//Game.data");
 	if (file.is_open())

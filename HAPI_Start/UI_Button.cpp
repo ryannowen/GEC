@@ -4,13 +4,8 @@
 #include "Audio.h"
 #include "UI_Window.h"
 
-void UI_Button::MouseHoverCheck()
-{
-	
-}
-
 UI_Button::UI_Button(const Vector2<float> argButtonPosition, const Vector2<float> argButtonCollision, const Vector2<float> argTextPosition, const HAPI_TColour argTextColour, const std::string& argText, const int argTextSize, const std::string& argFontPath, const std::string& argButtonSprite, const std::string& argHoverSoundPath, const HAPI_TSoundOptions& argHoverSoundOptions, const std::string& argPressedSoundPath, const HAPI_TSoundOptions& argPressedSoundOptions)
-	: UI_Element(argButtonPosition), buttonCollision(Rectangle(argButtonCollision.x, 0, argButtonCollision.y, 0)), buttonLabel(argTextPosition + argButtonPosition, argTextColour, argText, argTextSize, argFontPath), buttonSprite(argButtonSprite), hoverSoundPath(argHoverSoundPath), pressedSoundPath(argPressedSoundPath)
+	: UI_Element(argButtonPosition), buttonCollision(Rectangle(static_cast<int>(argButtonCollision.x), 0, static_cast<int>(argButtonCollision.y), 0)), buttonLabel(argTextPosition + argButtonPosition, argTextColour, argText, argTextSize, argFontPath), buttonSprite(argButtonSprite), hoverSoundPath(argHoverSoundPath), pressedSoundPath(argPressedSoundPath)
 {
 	AUDIO.LoadSound(argPressedSoundPath, argPressedSoundOptions);
 	AUDIO.LoadSound(argHoverSoundPath, argHoverSoundOptions);

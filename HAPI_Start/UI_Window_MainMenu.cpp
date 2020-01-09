@@ -44,8 +44,29 @@ void UI_Window_MainMenu::UpdateWindow()
 	case EDifficulty::eInsane:
 		currentDifficulty = "INSANE";
 		break;
+
+	case EDifficulty::eImpossible:
+		currentDifficulty = "Impossible";
+		break;
+
+	case EDifficulty::eExcessive:
+		currentDifficulty = "Too excessive";
+		break;
+
+	case EDifficulty::eStop:
+		currentDifficulty = "Please stop!";
+		break;
+
+	case EDifficulty::eFine:
+		currentDifficulty = "Fine, don't";
+		break;
+
+	case EDifficulty::eBye:
+		currentDifficulty = "Ok bye...";
+		break;
+
 	default:
-		currentDifficulty = "Unknown";
+		currentDifficulty = "ERROR: Unknown";
 		std::cerr << "ERROR: Trying to get difficulty but case isn't specified" << std::endl;
 		break;
 	}

@@ -24,7 +24,7 @@ void Vortex::Collided(Entity& argEntity)
 {
 	Entity& player{ *WORLD.GetPlayer() };
 
-	/// checks if entity is player
+	/// checks if entity is player, if it is then change scene
 	if (argEntity == player)
 	{
 		player.SetVelocity(Vector2<float>(0, 0));

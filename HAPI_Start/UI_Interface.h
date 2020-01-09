@@ -27,10 +27,19 @@ public:
 		return *userInterface;
 	}
 
+	// Updates all created UI windows
 	void UpdateWindows();
+
+	// Draws all created UI windows
 	void DrawWindows();
-	bool CreateWindow(const std::string& argName, const std::shared_ptr<UI_Window> argWindow);
+
+	// Creates window
+	bool CreateWindow(const std::string& argName, const std::shared_ptr<UI_Window>& argWindow);
+	
+	// Sets active state of window
 	void SetWindowActive(const std::string& argName, const bool argActive);
+	
+	// Sets all windows to disabled
 	void HideAllWindows();
 };
 

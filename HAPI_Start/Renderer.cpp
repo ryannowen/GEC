@@ -82,7 +82,7 @@ void Renderer::DrawSprite(const std::string& argSpritePath, const Vector2<float>
 	/// Checks if sprite has been created in map
 	if (spriteMap.find(argSpritePath) != spriteMap.end())
 	{
-		std::shared_ptr<Sprite> sprite{ spriteMap.at(argSpritePath) };
+		std::shared_ptr<Sprite>& sprite{ spriteMap.at(argSpritePath) };
 		if (sprite == nullptr)
 		{
 			std::cerr << "ERROR: Trying to draw sprite, but is nullptr" << std::endl;

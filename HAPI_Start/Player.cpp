@@ -84,7 +84,7 @@ void Player::ApplyPhysics(const Vector2<float> argDirection)
 
 	}
 
-	if (entityController->GetIsJumping(0) && isGrounded)
+	if (entityController->GetIsJumping(playerID) && isGrounded)
 	{
 		velocity.y -= speed.y * TIME.GetTickTimeSeconds(); /// Applies Jump force
 		isGrounded = false;
@@ -111,6 +111,8 @@ Player::Player(const std::string& argSpritePath, const AnimationData& argAnimDat
 	entityController->SetKeyboardInput(argKeyboardMovementKeys);
 	entityController->SetControllerInput(argControllerMovementKeys);
 
+	playerID = 0;
+
 	passable = true;
 	hasGravity = true;
 }
@@ -119,7 +121,7 @@ void Player::Update()
 {
 	/// Updates current sprite animation depending on state
 
-	entityController->Update(*this, 0);
+	entityController->Update(*this, playerID);
 	spriteAnimData.currentSpriteCells.y = static_cast<int>(entityController->GetAction());
 
 	/// Increases attack recharge delay, also allows for attacking if enough time has passed
@@ -135,154 +137,10 @@ void Player::Update()
 	}
 
 	
-	Vector2<float> playerDir{ entityController->GetMovementDirection(0) };
+	Vector2<float> playerDir{ entityController->GetMovementDirection(playerID) };
 	playerDir.y = 0;
 
 	ApplyPhysics(playerDir);
-	
-
-
-
-	// TODO Remove
-	const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
-	const HAPI_TMouseData& mouseData{ HAPI.GetMouseData() };
-
-	if (keyboardData.scanCode[HK_RETURN])
-	{
-		WORLD.level->Save("Data//Scenes.xml");
-	}
-	else if (keyboardData.scanCode[HK_NUMPAD8] && cellLoc.y != 0)
-		cellLoc.y--;
-	else if (keyboardData.scanCode[HK_NUMPAD5])
-	{
-		cellLoc.y++;
-		if (cellLoc.y > 8)
-			cellLoc.y = 8;
-	}
-
-	if (keyboardData.scanCode[HK_NUMPAD4] && cellLoc.x != 0)
-		cellLoc.x--;
-	else if (keyboardData.scanCode[HK_NUMPAD6])
-	{
-		cellLoc.x++;
-		if (cellLoc.x > 7)
-			cellLoc.x = 7;
-	}
-
-	bool remove{ false };
-
-	if (mouseData.middleButtonDown)
-		remove = true;
-
-	if (mouseData.leftButtonDown || mouseData.rightButtonDown || remove)
-	{
-		std::string spritePath;
-		Vector2<unsigned int> cellCount(1,1);
-
-		if (mouseData.leftButtonDown)
-		{
-			spritePath = "Data//Assets_Fast.png";
-			cellCount = Vector2<unsigned int>(8, 9);
-		}
-		else if (mouseData.rightButtonDown)
-		{
-			cellCount = Vector2<unsigned int>(7, 8);
-			spritePath = "Data//Assets_Alpha.png";
-		}
-
-
-
-		Vector2<float> mousePosition(0.0f, 0.0f);
-
-		mousePosition.x = ((mouseData.x + static_cast<int>(WORLD.cameraOffset)) / 32) * 32.0f;
-		mousePosition.y = 32 + (mouseData.y / 32) * 32.0f;
-
-		std::shared_ptr<Scene> currentScene{ WORLD.GetScene() };
-
-
-		for (std::shared_ptr<Entity>& entity : currentScene->entities)
-		{
-			if (entity->GetSide() == ESide::eEnvironment)
-			{
-				if ((static_cast<int>(entity->currentPosition.x) == static_cast<int>(mousePosition.x)) && (static_cast<int>(entity->currentPosition.y) == static_cast<int>(mousePosition.y - 32)))
-				{
-					if (remove)
-					{
-						std::vector<CHapiXMLNode*> scenes{ WORLD.level->GetAllNodesWithName("Scene") };
-
-						for (CHapiXMLNode* scene : scenes)
-						{
-							std::vector<CHapiXMLAttribute> sceneAtts{scene->GetAttributes()};
-							if (sceneAtts[0].AsString() == WORLD.currentSceneName)
-							{
-								std::vector<CHapiXMLNode*> tiles{ scene->GetChildren() };
-
-								for (CHapiXMLNode* tile : tiles)
-								{
-									std::vector<CHapiXMLAttribute> tileAtts{ tile->GetAttributes() };
-
-									if (tileAtts[0].AsInt() == static_cast<int>(entity->currentPosition.x) && tileAtts[1].AsInt() == static_cast<int>(entity->currentPosition.y + 32))
-									{
-										tile->AddAttribute(CHapiXMLAttribute("REMOVE ME", "REMOVE ME"));
-										entity->SetSpritePath("");
-										std::cerr << "Found Tile to remove" << std::endl;
-										return;
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						cellLoc = entity->spriteAnimData.currentSpriteCells;
-
-						std::cout << "Selected At : X=" << mousePosition.x << "  Y=" << mousePosition.y << std::endl;
-					}
-					return;
-				}
-
-			}
-		}
-
-		if (static_cast<int>(mousePosition.x) != previousOffset.x || static_cast<int>(mousePosition.y) != previousOffset.y)
-		{
-			spawnedAmount++;
-
-
-			previousOffset.x = static_cast<int>(mousePosition.x);
-			previousOffset.y = static_cast<int>(mousePosition.y);
-
-			std::cout << "Spawned At : X=" << mousePosition.x << "  Y=" << mousePosition.y << "  Amount=" << spawnedAmount << std::endl;
-
-
-			WORLD.CreateEntity(WORLD.currentSceneName, std::static_pointer_cast<Entity>(std::make_shared<Tile>(spritePath, AnimationData(cellCount, std::vector<float>{0.0f}, std::vector<unsigned int>{1}, std::vector<bool>{false}, cellLoc, false))), false);
-			currentScene->entities.back()->Init(mousePosition, ESide::eEnvironment, Vector2<float>(0, 0), 0, 0, 0);
-
-			CHapiXMLNode* node = new CHapiXMLNode("Tile");
-
-			node->AddAttribute(CHapiXMLAttribute("XLoc", std::to_string(mousePosition.x)));
-			node->AddAttribute(CHapiXMLAttribute("YLoc", std::to_string(mousePosition.y)));
-			node->AddAttribute(CHapiXMLAttribute("SpritePath", spritePath));
-			node->AddAttribute(CHapiXMLAttribute("XCellLoc", std::to_string(cellLoc.x)));
-			node->AddAttribute(CHapiXMLAttribute("YCellLoc", std::to_string(cellLoc.y)));
-			node->AddAttribute(CHapiXMLAttribute("XTotalCells", std::to_string(cellCount.x)));
-			node->AddAttribute(CHapiXMLAttribute("YTotalCells", std::to_string(cellCount.y)));
-			node->AddAttribute(CHapiXMLAttribute("Health", std::to_string(0)));
-			node->AddAttribute(CHapiXMLAttribute("Damage", std::to_string(0)));
-
-			std::vector<CHapiXMLNode*> scenes{ WORLD.level->GetAllNodesWithName("Scene") };
-
-			for (CHapiXMLNode* scene : scenes)
-			{
-				if (scene->GetAttributes()[0].AsString() == WORLD.currentSceneName)
-				{
-					scene->AddChild(node);
-					break;
-				}
-			}
-		}
-	}
-	///////////
 }
 
 void Player::Init(const Vector2<float>& argPosition, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage)

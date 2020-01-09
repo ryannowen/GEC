@@ -20,16 +20,25 @@ protected:
 	std::vector<std::shared_ptr<UI_Element>> elements;
 	Vector2<float> position{ 0, 0 };
 
-	virtual void OnEnabled();
-	virtual void OnDisabled();
+	// When window is enabled
+	virtual void OnEnable();
+
+	// When window is disabled
+	virtual void OnDisable();
 
 public:
 	UI_Window(const Vector2<float> argPosition);
 
+	// Init function for creating window elements
 	virtual void Init() = 0;
+
+	// Updates all window elements
 	virtual void UpdateWindow();
+
+	// Draws all window elements to screen
 	void DrawWindow() const;
 
+	// Changes active state of window, and actives OnEnable/Disable
 	void SetActive(const bool argActive);
 };
 

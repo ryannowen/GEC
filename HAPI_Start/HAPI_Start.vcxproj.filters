@@ -52,14 +52,8 @@
     <Filter Include="Header Files\World\Entities\Controllers">
       <UniqueIdentifier>{8f58e0d4-85cd-4e58-9612-a8115ac16a47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\World\Entities\Controllers\Bossess">
-      <UniqueIdentifier>{3780ea48-8402-4afd-84c7-be417bc4d9e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\World\Entities\Enemies">
       <UniqueIdentifier>{c415568f-2396-4f60-b6c0-9c81e826be62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\World\Entities\Enemies\Bossess">
-      <UniqueIdentifier>{fc4f57c3-e650-41d8-89a9-be09eac95221}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\World">
       <UniqueIdentifier>{876631b5-5d06-4d43-909a-ec1ac0299478}</UniqueIdentifier>
@@ -70,20 +64,38 @@
     <Filter Include="Source Files\World\Entities\Controllers">
       <UniqueIdentifier>{f059d910-f321-467a-854f-518b41a54372}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\World\Entities\Controllers\Bossess">
-      <UniqueIdentifier>{3fc1f5d9-89c6-44d8-9118-2c55265729ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\World\Entities\Enemies">
       <UniqueIdentifier>{00a00e5b-9b60-429c-b8d7-74121aac9909}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\World\Entities\Enemies\Bossess">
-      <UniqueIdentifier>{522dec00-08a8-4607-90ff-7afb69ab5d5f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Renderer">
       <UniqueIdentifier>{d92426fe-8a19-42ce-aba8-00bc2110f896}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Renderer">
       <UniqueIdentifier>{22bf91e7-fe3d-4a52-abc1-e5f1dd3cedde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Controllers\Bosses">
+      <UniqueIdentifier>{9f0259d6-223b-4897-af7c-c2f5d2c78343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities\Controllers\Bosses">
+      <UniqueIdentifier>{2c58c94c-5624-413d-bccc-e8266578173e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities\Enemies\Bosses">
+      <UniqueIdentifier>{fc4f57c3-e650-41d8-89a9-be09eac95221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Enemies\Bosses">
+      <UniqueIdentifier>{522dec00-08a8-4607-90ff-7afb69ab5d5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities\Enemies\Normal">
+      <UniqueIdentifier>{b1588a25-a8a2-450a-a228-9d9bd711e881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World\Entities\Controllers\Normal">
+      <UniqueIdentifier>{50257398-dfbe-4d0e-9aa6-d2dbc8543e7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Controllers\Normal">
+      <UniqueIdentifier>{e4376219-272f-4ad7-b203-84457a1c119a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entities\Enemies\Normal">
+      <UniqueIdentifier>{045269d5-dd35-4d44-82ed-5a662d945e09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -112,9 +124,6 @@
       <Filter>Source Files\World\Entities\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Controller_Player.cpp">
-      <Filter>Source Files\World\Entities\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller_Slime.cpp">
       <Filter>Source Files\World\Entities\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Explosion.cpp">
@@ -180,41 +189,14 @@
     <ClCompile Include="UI_Interface.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Controller_Archer.cpp">
-      <Filter>Source Files\World\Entities\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller_Bat.cpp">
-      <Filter>Source Files\World\Entities\Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="Projectile_Fireball.cpp">
       <Filter>Source Files\World\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller_Sorcerer.cpp">
-      <Filter>Source Files\World\Entities\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Vortex.cpp">
       <Filter>Source Files\World\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Archer.cpp">
-      <Filter>Source Files\World\Entities\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Bat.cpp">
-      <Filter>Source Files\World\Entities\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Slime.cpp">
-      <Filter>Source Files\World\Entities\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Slime_Explosive.cpp">
-      <Filter>Source Files\World\Entities\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Sorcerer.cpp">
-      <Filter>Source Files\World\Entities\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Sorcerer_Boss.cpp">
-      <Filter>Source Files\World\Entities\Enemies\Bossess</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller_Sorcerer_Boss.cpp">
-      <Filter>Source Files\World\Entities\Controllers\Bossess</Filter>
+      <Filter>Source Files\World\Entities\Enemies\Bosses</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files\Audio</Filter>
@@ -234,6 +216,48 @@
     <ClCompile Include="UI_Button_ChangeDifficulty.cpp">
       <Filter>Source Files\UI\Buttons</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Window_EndScreen.cpp">
+      <Filter>Source Files\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Sorcerer_Boss.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime_Boss.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Slime_Boss.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Archer.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Bat.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Slime.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller_Sorcerer.cpp">
+      <Filter>Source Files\World\Entities\Controllers\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Archer.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime_Explosive.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Slime_Slimeling.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorcerer.cpp">
+      <Filter>Source Files\World\Entities\Enemies\Normal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector2.h">
@@ -249,9 +273,6 @@
       <Filter>Header Files\World\Entities\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Controller_Player.h">
-      <Filter>Header Files\World\Entities\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller_Slime.h">
       <Filter>Header Files\World\Entities\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
@@ -329,41 +350,14 @@
     <ClInclude Include="UI_Interface.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Controller_Archer.h">
-      <Filter>Header Files\World\Entities\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller_Bat.h">
-      <Filter>Header Files\World\Entities\Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="Projectile_Fireball.h">
       <Filter>Header Files\World\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller_Sorcerer.h">
-      <Filter>Header Files\World\Entities\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Vortex.h">
       <Filter>Header Files\World\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Archer.h">
-      <Filter>Header Files\World\Entities\Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="Bat.h">
-      <Filter>Header Files\World\Entities\Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="Sorcerer.h">
-      <Filter>Header Files\World\Entities\Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="Slime.h">
-      <Filter>Header Files\World\Entities\Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="Slime_Explosive.h">
-      <Filter>Header Files\World\Entities\Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="Sorcerer_Boss.h">
-      <Filter>Header Files\World\Entities\Enemies\Bossess</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller_Sorcerer_Boss.h">
-      <Filter>Header Files\World\Entities\Controllers\Bossess</Filter>
+      <Filter>Header Files\World\Entities\Enemies\Bosses</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>Header Files\Audio</Filter>
@@ -386,5 +380,50 @@
     <ClInclude Include="UI_Button_ChangeDifficulty.h">
       <Filter>Header Files\UI\Buttons</Filter>
     </ClInclude>
+    <ClInclude Include="UI_Window_EndScreen.h">
+      <Filter>Header Files\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Sorcerer_Boss.h">
+      <Filter>Header Files\World\Entities\Controllers\Bosses</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime_Boss.h">
+      <Filter>Header Files\World\Entities\Enemies\Bosses</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Slime_Boss.h">
+      <Filter>Header Files\World\Entities\Controllers\Bosses</Filter>
+    </ClInclude>
+    <ClInclude Include="Archer.h">
+      <Filter>Header Files\World\Entities\Enemies\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>Header Files\World\Entities\Enemies\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime.h">
+      <Filter>Header Files\World\Entities\Enemies\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime_Explosive.h">
+      <Filter>Header Files\World\Entities\Enemies\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Slime_Slimeling.h">
+      <Filter>Header Files\World\Entities\Enemies\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorcerer.h">
+      <Filter>Header Files\World\Entities\Enemies\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Archer.h">
+      <Filter>Header Files\World\Entities\Controllers\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Bat.h">
+      <Filter>Header Files\World\Entities\Controllers\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Slime.h">
+      <Filter>Header Files\World\Entities\Controllers\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller_Sorcerer.h">
+      <Filter>Header Files\World\Entities\Controllers\Normal</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

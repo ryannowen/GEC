@@ -8,6 +8,8 @@ void Projectile::OnAnimFinished()
 
 void Projectile::OnDisable()
 {
+	/// Spawns explosion
+
 	velocity = Vector2<float>(0, 0);
 	spriteAnimData.currentPlaybackTime = 0;
 	spriteAnimData.currentSpriteCells = Vector2<unsigned int>(0, 0);

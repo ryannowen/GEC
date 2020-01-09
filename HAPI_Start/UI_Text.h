@@ -16,8 +16,11 @@ public:
 	UI_Text(const Vector2<float> argPosition, const HAPI_TColour argColour, const std::string& argText, const int argSize, const std::string& argFontPath);
 
 	virtual void UpdateElement(UI_Window& argWindow) override final;
+
+	// Draws text element to screen
 	virtual void DrawElement(const UI_Window& argWindow) override final;
 
+	// Changes text
 	void SetText(const std::string& argText) { text = argText; };
 
 };

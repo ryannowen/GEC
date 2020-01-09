@@ -64,7 +64,7 @@ void Scene::CheckCollisions()
 	}
 }
 
-void Scene::CheckCollisions(std::shared_ptr<Scene> argScene)
+void Scene::CheckCollisions(std::shared_ptr<Scene>& argScene)
 {
 	std::vector<std::shared_ptr<Entity>>& otherEntities{ argScene->entities };
 

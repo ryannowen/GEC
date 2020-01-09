@@ -9,9 +9,16 @@ void Time::Update()
 	deltaTime = static_cast<float>(HAPI.GetTime() - currentTime);
 	currentTime = HAPI.GetTime();
 
-	if (currentTime - elapsedTime > tickLength)
+	float time{ static_cast<float>(currentTime - elapsedTime) };
+
+	if (time > tickLength * 2) /// Prevents Freeze and skip
 	{
-		tick = currentTime - elapsedTime;
+		tick = 0;
+		elapsedTime = HAPI.GetTime();
+	}
+	else if (time > tickLength)
+	{
+		tick = time;
 		elapsedTime = HAPI.GetTime();
 		hasTicked = true;
 	}

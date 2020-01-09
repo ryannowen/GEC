@@ -10,7 +10,24 @@ void Controller_Bat::Update(Entity& argEntity, const unsigned int argPlayerID)
 	{
 		const HAPI_TControllerData& controllerData{ HAPI.GetControllerData(argPlayerID) };
 
-		if (!controllerData.isAttached)
+		if (controllerData.isAttached) /// Controller
+		{
+			Vector2<float> dir{ GetMovementDirection(argPlayerID) };
+
+			if (controllerData.digitalButtons[controllerInput[3]])
+			{
+				if (bat->canAttack && !bat->isCharging)
+				{
+					bat->Attack();
+					UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
+				}
+			}
+			else if (static_cast<int>(dir.x) > 0 && !bat->isCharging)
+				controllerAction = EAction::eIdleRight;
+			else if (static_cast<int>(dir.x) < 0 && !bat->isCharging)
+				controllerAction = EAction::eIdleLeft;
+		}
+		else
 		{
 			const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
@@ -23,24 +40,16 @@ void Controller_Bat::Update(Entity& argEntity, const unsigned int argPlayerID)
 				}
 			}
 			else if (keyboardData.scanCode[keyboardInput[2]] && !bat->isCharging)
-				controllerAction = EAction::eMoveRight;
+				controllerAction = EAction::eIdleRight;
 			else if (keyboardData.scanCode[keyboardInput[3]] && !bat->isCharging)
-				controllerAction = EAction::eMoveLeft;
-			else if (keyboardData.scanCode[keyboardInput[4]] && !bat->isCharging)
-				UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
-			else
-				UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
-		}
-		else
-		{
-
+				controllerAction = EAction::eIdleLeft;
 		}
 	}
 	else /// AI
 	{
-		const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
+		const std::shared_ptr<Entity>& player{ WORLD.GetPlayer() };
 
-		const Vector2<float> dir{ player->currentPosition - bat->currentPosition };
+		const Vector2<float> dir{ player->GetPosition() - bat->currentPosition };
 
 		const float dist{ dir.Dot() };
 

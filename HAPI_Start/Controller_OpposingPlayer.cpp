@@ -6,7 +6,7 @@
 
 void Controller_OpposingPlayer::Action(Player_Opposing* argPlayer)
 {
-	canAction = false;
+	argPlayer->canAction = false;
 
 	if (WORLD.GetSceneState() == ESceneState::ePlacement)
 		argPlayer->PlaceEntity();
@@ -17,40 +17,32 @@ void Controller_OpposingPlayer::Action(Player_Opposing* argPlayer)
 void Controller_OpposingPlayer::Update(Entity& argEntity, const unsigned int argPlayerID)
 {
 	const HAPI_TControllerData& controllerData{ HAPI.GetControllerData(argPlayerID) };
-	Player_Opposing* player = static_cast<Player_Opposing*>(&argEntity);
+	Player_Opposing* playerOpposing = static_cast<Player_Opposing*>(&argEntity);
 
-	if (!canAction)
+	if (controllerData.isAttached) /// Controller
 	{
-		actionDelay += TIME.GetTickTimeSeconds();
-
-		if (actionDelay >= actionDelayTime)
+		if (controllerData.digitalButtons[controllerInput[2]])
 		{
-			actionDelay = 0;
-			canAction = true;
+			playerOpposing->ChangePlacementEntity();
+		}
+		else if (controllerData.digitalButtons[controllerInput[3]] && playerOpposing->canAction)
+		{
+			Action(playerOpposing);
 		}
 	}
-
-	if (!controllerData.isAttached)
+	else /// Keyboard
 	{
 		const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
 		if (keyboardData.scanCode[keyboardInput[4]])
 		{
-			player->ChangePlacementEntity();
+			playerOpposing->ChangePlacementEntity();
 		}
-		else if (keyboardData.scanCode[keyboardInput[5]] && canAction)
+		else if (keyboardData.scanCode[keyboardInput[5]] && playerOpposing->canAction)
 		{
-			Action(player);
+			Action(playerOpposing);
 		}
-		
-
-
-
-
-	}
-	else
-	{
-
 	}
 
 }
+

@@ -3,9 +3,13 @@
 class UI_Button_Resume : public UI_Button
 {
 protected:
+	// When mouse begins hovering
 	virtual void OnBeginHover(UI_Window& argWindow) override final;
+	// When mouse ends hovering
 	virtual void OnEndHover(UI_Window& argWindow) override final;
+	// When mouse starts clicking
 	virtual void OnBeginClick(UI_Window& argWindow) override final;
+	// When mouse ends clicking
 	virtual void OnEndClick(UI_Window& argWindow) override final;
 
 public:

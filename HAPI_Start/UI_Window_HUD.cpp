@@ -27,17 +27,17 @@ void UI_Window_HUD::Init()
 
 void UI_Window_HUD::UpdateWindow()
 {
-	std::shared_ptr<Player> player{ std::static_pointer_cast<Player>(WORLD.GetPlayer()) };
+	std::shared_ptr<Player>& player{ std::static_pointer_cast<Player>(WORLD.GetPlayer()) };
 
 	std::static_pointer_cast<UI_Text>(elements[0])->SetText("Health: " + std::to_string(player->health));
 	std::static_pointer_cast<UI_Text>(elements[1])->SetText("Current Remaining Enemies: " + std::to_string(WORLD.defatedEnemies) + " / " + std::to_string(WORLD.placedEnemies));
 	std::static_pointer_cast<UI_Text>(elements[2])->SetText("Bosses Defeated: " + std::to_string(WORLD.bossesDefeated) + " / " + std::to_string(WORLD.requiredDefeatedBosses));
 	std::static_pointer_cast<UI_Text>(elements[3])->SetText("Score: " + std::to_string(WORLD.score));
 
-	std::shared_ptr<Player_Opposing> opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
+	std::shared_ptr<Player_Opposing>& opposingPlayer{ std::static_pointer_cast<Player_Opposing>(WORLD.GetOpposingPlayer()) };
 
 	std::string currentlyPlacing{ "None" };
-	switch (opposingPlayer->currentPlacement)
+	switch (opposingPlayer->GetCurrentPlacement())
 	{
 	case ESpawnableEntities::eSlime:
 		currentlyPlacing = "Normal Slime";
@@ -60,7 +60,7 @@ void UI_Window_HUD::UpdateWindow()
 		break;
 
 	default:
-		std::cerr << "ERROR: Changing HUD placement name but case isn't specified, placingEnumID=" << static_cast<int>(opposingPlayer->currentPlacement) << std::endl;
+		std::cerr << "ERROR: Changing HUD placement name but case isn't specified, placingEnumID=" << static_cast<int>(opposingPlayer->GetCurrentPlacement()) << std::endl;
 		break;
 	}
 

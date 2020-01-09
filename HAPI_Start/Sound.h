@@ -17,11 +17,15 @@ public:
 		: soundOptions(argOptions)
 	{}
 
-
+	// Changes volume of sound
 	void SetVolume(const float argVolume) { soundOptions.volume = argVolume; };
+	// Changes looping state of sound
 	void SetLooping(const bool argLoop) { soundOptions.loop = argLoop; };
 
+	// Plays sound
 	bool Play(const std::string& argSoundPath) { return HAPI.PlaySound(argSoundPath, soundOptions, instanceID); };
+	
+	// Returns current instance for this sound
 	int GetInstanceID() const { return instanceID; };
 };
 

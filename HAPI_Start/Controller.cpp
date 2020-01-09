@@ -88,15 +88,16 @@ bool Controller::GetIsJumping(const unsigned int argPlayerID)
 {
 	const HAPI_TControllerData& controllerData{ HAPI.GetControllerData(argPlayerID) };
 	bool jumping{ false };
-	if (!controllerData.isAttached)
+	if (controllerData.isAttached)
+	{
+		jumping = controllerData.digitalButtons[controllerInput[2]];
+
+	}
+	else
 	{
 		const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
 		jumping = keyboardData.scanCode[keyboardInput[4]];
-	}
-	else
-	{
-		jumping = controllerData.digitalButtons[controllerInput[2]];
 	}
 
 	if (jumping)

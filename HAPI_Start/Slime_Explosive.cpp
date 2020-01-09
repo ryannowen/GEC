@@ -1,11 +1,14 @@
 #include "Slime_Explosive.h"
 
 #include "World.h"
+#include "Audio.h"
 
 void Slime_Explosive::OnDeath()
 {
 	WORLD.IncreaseDefeatedEnemies();
 	WORLD.AddScore(20);
+
+	AUDIO.PlaySound(deathSound);
 }
 
 void Slime_Explosive::OnAnimFinished()

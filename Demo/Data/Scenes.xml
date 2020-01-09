@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Scenes>
-	<Scene name="Boss_0" background="Data//Boss_0.png" length="1568" type="3">
+	<Scene name="UI" background="Data//UI_Background.png" length="1568" type="4" />
+	<Scene name="Boss_0" background="Data//Boss_0.png" length="1568" type="2">
 		<Tile XLoc="64.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="96.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="32.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
@@ -18,11 +19,6 @@
 		<Tile XLoc="544.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="608.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="640.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="704.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="736.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="768.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="800.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="864.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="928.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="992.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1568.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
@@ -40,7 +36,6 @@
 		<Tile XLoc="1056.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1024.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="224.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="1" YCellLoc="1" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="896.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="1" YCellLoc="1" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="576.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="4" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="128.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="4" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="960.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="4" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
@@ -127,12 +122,24 @@
 		<Tile XLoc="1248.000000" YLoc="640.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="6" YCellLoc="8" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1280.000000" YLoc="640.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="6" YCellLoc="8" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="384.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="4" YCellLoc="5" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="832.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="4" YCellLoc="5" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1408.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="4" YCellLoc="5" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
-		<Tile XLoc="672.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="5" YCellLoc="1" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1344.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="5" YCellLoc="1" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="768.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="704.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1568.000000" YLoc="768.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1568.000000" YLoc="704.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1568.000000" YLoc="736.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="2" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="736.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="2" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="704.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="736.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="768.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="800.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="832.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="864.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="672.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="896.000000" YLoc="768.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 	</Scene>
-	<Scene name="Reward_0" background="Data//Reward_0.png" length="1568" type="2">
+	<Scene name="Reward_0" background="Data//Reward_0.png" length="1568" type="3">
 		<Tile XLoc="64.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="0.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="32.000000" YLoc="800.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="0" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
@@ -237,6 +244,12 @@
 		<Tile XLoc="1440.000000" YLoc="544.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="3" YCellLoc="4" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1472.000000" YLoc="544.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="3" YCellLoc="4" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1536.000000" YLoc="608.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="3" YCellLoc="4" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="704.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="768.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1568.000000" YLoc="704.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1568.000000" YLoc="768.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1568.000000" YLoc="736.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="2" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="736.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="2" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
 	</Scene>
 	<Scene name="Transition_0" background="Data//Transition_0.png" length="1856" type="1">
 		<Tile XLoc="160.000000" YLoc="672.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="5" YCellLoc="8" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
@@ -391,5 +404,11 @@
 		<Tile XLoc="1856.000000" YLoc="608.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="2" YCellLoc="3" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1856.000000" YLoc="640.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="1" YCellLoc="2" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
 		<Tile XLoc="1856.000000" YLoc="672.000000" SpritePath="Data//Assets_Fast.png" XCellLoc="1" YCellLoc="2" XTotalCells="8" YTotalCells="9" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="704.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="768.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="0.000000" YLoc="736.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="2" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1856.000000" YLoc="704.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1856.000000" YLoc="768.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="3" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
+		<Tile XLoc="1856.000000" YLoc="736.000000" SpritePath="Data//Assets_Alpha.png" XCellLoc="4" YCellLoc="2" XTotalCells="7" YTotalCells="8" Health="0" Damage="0" />
 	</Scene>
 </Scenes>

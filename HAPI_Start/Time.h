@@ -24,23 +24,6 @@ private:
 	static std::shared_ptr<Time> time;
 
 public:
-	void Update();
-
-	/// Returns Delta time in Milliseconds
-	float GetDeltaTimeMiliseconds() { return deltaTime; };
-	float GetDeltaTimeSeconds() { return deltaTime / 1000.0f; };
-
-	bool GetHasTicked(){ return hasTicked; };
-	DWORD GetTickLength() { return tickLength; };
-
-	float GetTickTimeMiliseconds() { return tick; };
-	float GetTickTimeSeconds() { return tick / 1000.0f; };
-
-	DWORD GetCurrentTime() { return currentTime; };
-	DWORD GetElapsedTime() { return elapsedTime; };
-
-	float CalculateInterp() { return static_cast<float>(currentTime - elapsedTime) / tickLength; };
-
 	static Time& GetInstance()
 	{
 		if (time == nullptr)
@@ -50,6 +33,35 @@ public:
 
 		return *time;
 	}
+
+	// Updates time
+	void Update();
+
+	// Returns Delta time in Milliseconds
+	float GetDeltaTimeMiliseconds() { return deltaTime; };
+	// Returns Delta time in Seconds
+	float GetDeltaTimeSeconds() { return deltaTime / 1000.0f; };
+
+	// Returns true if time has ticked
+	bool GetHasTicked(){ return hasTicked; };
+	// Returns the length of a tick (In Milliseconds)
+	DWORD GetTickLength() { return tickLength; };
+
+	// Returns Tick time in Milliseconds
+	float GetTickTimeMiliseconds() { return tick; };
+	// Returns Tick time in Seconds
+	float GetTickTimeSeconds() { return tick / 1000.0f; };
+
+	// Returns current time
+	DWORD GetCurrentTime() { return currentTime; };
+
+	// Returns elapsed time
+	DWORD GetElapsedTime() { return elapsedTime; };
+
+	// Returns calculated interpolation for frame
+	float CalculateInterp() { return static_cast<float>(currentTime - elapsedTime) / tickLength; };
+
+	
 };
 
 #define TIME Time::GetInstance()

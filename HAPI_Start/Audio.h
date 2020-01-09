@@ -20,7 +20,7 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Sound>> soundMap;
 	std::unordered_map<std::string, std::shared_ptr<Sound>> musicMap;
 
-	std::string& currentMusic{ std::string() };
+	std::string currentMusic{ std::string() };
 
 public:
 	static Audio& GetInstance()
@@ -37,11 +37,15 @@ public:
 
 	// Loads sound returns true if sound is loaded, otherwise somehow failed
 	bool LoadSound(const std::string& argSoundPath, const HAPI_TSoundOptions& argOptions);
+
+	// Loads music returns true if music is loaded, otherwise somehow failed
 	bool LoadMusic(const std::string& argMusicPath, const HAPI_TSoundOptions& argOptions);
 
 
 	// Plays sound if loaded
 	void PlaySound(const std::string& argSoundPath);
+
+	// Plays a randomly selected music
 	void PlayMusic();
 
 };

@@ -6,13 +6,11 @@
 class Controller_OpposingPlayer : public Controller
 {
 private:
+	// Triggers Possession or Placement for opposing player
 	void Action(Player_Opposing* argPlayer);
-	bool canAction{ true };
-	const float actionDelayTime{ 1.0f };
-	float actionDelay{ 0 };
 
 public:
+	// Updates controller and owner entity data
 	virtual void Update(Entity& argEntity, const unsigned int argPlayerID) override final;
-
 };
 

@@ -19,21 +19,24 @@ private:
 	bool canAttack{ true };
 	bool isAttacking{ false };
 
+	// Entity Attack returns true if successful in attack
 	bool Attack();
 protected:
+	// When entity takes enough damage to die
 	virtual void OnDeath() override final;
+	// When entity finishes the current animation
 	virtual void OnAnimFinished() override final;
+	// Applies gravity and movement physics to entity
 	virtual void ApplyPhysics(const Vector2<float> argDirection) override final;
 
-	Vector2<int> previousOffset{ -5, 1 }; // TODO Remove
-	int spawnedAmount{ 0 }; // TODO Remove
 public:
-	Vector2<unsigned int> cellLoc{ 4, 3 }; // TODO Remove
-
 	Player(const std::string& argSpritePath, const AnimationData& argAnimData, const Rectangle& argCollisionBounds, const std::vector<int>& argKeyboardMovementKeys, const std::vector<int>& argControllerMovementKeys);
+	// Updates entity
 	virtual void Update() override;
+	// Init of entity, activating and setting the state
 	virtual void Init(const Vector2<float>& argPosition, const ESide argSide, const Vector2<float>& argSpeed, const float argMaxSpeed, const int argHealth, const int argDamage) override final;
 
+	// Resets varaibles about entity
 	virtual void ResetEntity() override final;
 };
 

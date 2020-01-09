@@ -3,12 +3,13 @@
 class UI_Window_ScoreScreen : public UI_Window
 {
 protected:
-	virtual void OnEnabled();
+	// When window is enabled
+	virtual void OnEnable();
 
 public:
 	UI_Window_ScoreScreen(const Vector2<float> argPosition);
 
+	// Init function for creating window elements
 	virtual void Init() override final;
-	virtual void UpdateWindow() override final;
 };
 

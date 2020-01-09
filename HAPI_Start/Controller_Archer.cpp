@@ -14,8 +14,27 @@ void Controller_Archer::Update(Entity& argEntity, const unsigned int argPlayerID
 		if (archer->isAttacking)
 			return;
 
-		/// Keyboard 
-		if (!controllerData.isAttached)
+		
+		if (controllerData.isAttached) /// Controller
+		{
+			Vector2<float> dir{ GetMovementDirection(argPlayerID) };
+
+			if (controllerData.digitalButtons[controllerInput[3]])
+			{
+				if (archer->canAttack && !archer->isCharging)
+				{
+					if (archer->Attack(GetMovementDirection(argPlayerID)))
+						UpdateAnimDir(EAction::eAttackRight, EAction::eAttackLeft);
+				}
+			}
+			else if (static_cast<int>(dir.x) > 0 && !archer->isCharging)
+				controllerAction = EAction::eIdleRight;
+			else if (static_cast<int>(dir.x) < 0 && !archer->isCharging)
+				controllerAction = EAction::eIdleLeft;
+			else if (!archer->isAttacking || archer->isCharging)
+				UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
+		}
+		else /// Keyboard 
 		{
 			const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
@@ -23,7 +42,7 @@ void Controller_Archer::Update(Entity& argEntity, const unsigned int argPlayerID
 			{
 				if (archer->canAttack && !archer->isCharging)
 				{
-					if (archer->Attack(GetMovementDirection(1)))
+					if (archer->Attack(GetMovementDirection(argPlayerID)))
 						UpdateAnimDir(EAction::eAttackRight, EAction::eAttackLeft);
 				}
 			}
@@ -32,20 +51,15 @@ void Controller_Archer::Update(Entity& argEntity, const unsigned int argPlayerID
 			else if (keyboardData.scanCode[keyboardInput[3]] && !archer->isCharging)
 				controllerAction = EAction::eIdleLeft;
 			else if (!archer->isAttacking || archer->isCharging)
-			{
 				UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
-			}
-		}
-		else /// Controller
-		{
-
+			
 		}
 	}
 	else /// AI
 	{
-		const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
+		const std::shared_ptr<Entity>& player{ WORLD.GetPlayer() };
 
-		const Vector2<float> dir{ (player->currentPosition + Vector2<float>(archer->collisionBounds.Width() / 2.0f, archer->collisionBounds.Height() / 2.0f)) - archer->currentPosition };
+		const Vector2<float> dir{ player->GetPosition() - archer->currentPosition };
 
 		if (archer->canAttack && !archer->isAttacking && !archer->isCharging)
 		{

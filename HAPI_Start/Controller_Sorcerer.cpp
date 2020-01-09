@@ -14,8 +14,27 @@ void Controller_Sorcerer::Update(Entity& argEntity, const unsigned int argPlayer
 		if (sorcerer->isAttacking)
 			return;
 
-		/// Keyboard 
-		if (!controllerData.isAttached)
+		if (controllerData.isAttached) /// Controller 
+		{
+			Vector2<float> dir{ GetMovementDirection(argPlayerID) };
+
+			if (controllerData.digitalButtons[controllerInput[3]])
+			{
+				if (sorcerer->canAttack && !sorcerer->isCharging)
+				{
+					if (sorcerer->Attack(GetMovementDirection(argPlayerID)))
+						UpdateAnimDir(EAction::eAttackRight, EAction::eAttackLeft);
+				}
+			}
+			else if (static_cast<int>(dir.x) > 0 && !sorcerer->isCharging)
+				controllerAction = EAction::eIdleRight;
+			else if (static_cast<int>(dir.x) < 0 && !sorcerer->isCharging)
+				controllerAction = EAction::eIdleLeft;
+			else if (!sorcerer->isAttacking || sorcerer->isCharging)
+				UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
+			
+		}
+		else  /// Keyboard 
 		{
 			const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
 
@@ -23,7 +42,7 @@ void Controller_Sorcerer::Update(Entity& argEntity, const unsigned int argPlayer
 			{
 				if (sorcerer->canAttack && !sorcerer->isCharging)
 				{
-					if (sorcerer->Attack(GetMovementDirection(1)))
+					if (sorcerer->Attack(GetMovementDirection(argPlayerID)))
 						UpdateAnimDir(EAction::eAttackRight, EAction::eAttackLeft);
 				}
 			}
@@ -32,20 +51,15 @@ void Controller_Sorcerer::Update(Entity& argEntity, const unsigned int argPlayer
 			else if (keyboardData.scanCode[keyboardInput[3]] && !sorcerer->isCharging)
 				controllerAction = EAction::eIdleLeft;
 			else if (!sorcerer->isAttacking || sorcerer->isCharging)
-			{
 				UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
-			}
-		}
-		else /// Controller
-		{
-
+			
 		}
 	}
 	else /// AI
 	{
-		const std::shared_ptr<Entity> player{ WORLD.GetPlayer() };
+		const std::shared_ptr<Entity>& player{ WORLD.GetPlayer() };
 
-		const Vector2<float> dir{ (player->currentPosition + Vector2<float>(sorcerer->collisionBounds.Width() / 2.0f, sorcerer->collisionBounds.Height() / 2.0f)) - sorcerer->currentPosition };
+		const Vector2<float> dir{ (player->GetPosition() + Vector2<float>(sorcerer->collisionBounds.Width() / 2.0f, sorcerer->collisionBounds.Height() / 2.0f)) - sorcerer->currentPosition };
 
 		if (sorcerer->canAttack && !sorcerer->isAttacking && !sorcerer->isCharging)
 		{
@@ -66,8 +80,6 @@ void Controller_Sorcerer::Update(Entity& argEntity, const unsigned int argPlayer
 		{
 			UpdateAnimDir(EAction::eIdleRight, EAction::eIdleLeft);
 		}
-
-
 	}
 
 }

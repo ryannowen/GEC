@@ -19,13 +19,18 @@ private:
 
 	Vector2<unsigned int> totalNumOfCells{ 0, 0 };
 
+	// Blits sprite to screen
 	bool FastBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition);
 	bool AlphaBlit(BYTE* argScreenPointer, const Rectangle& argScreen, const Vector2<float> argPosition);
 
 public:
 	Sprite(const std::string& argSpritePath, const bool argHasAlpha, const Vector2<unsigned int> argTotalNumOfSpriteCells);
 	~Sprite();
+
+	// Loads a texture from file
 	bool LoadTexture(const std::string& argSpritePath, const bool argHasAlpha = false);
+
+	// Readys sprite for drawing then begins blitting
 	bool DrawSprite(BYTE* argScreenPointer, const Rectangle& argScreen, Vector2<float> argPosition, Vector2<unsigned int>& argCurrentCells);
 };
 

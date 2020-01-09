@@ -1,11 +1,11 @@
 #include "UI_Window.h"
 
 
-void UI_Window::OnEnabled()
+void UI_Window::OnEnable()
 {
 }
 
-void UI_Window::OnDisabled()
+void UI_Window::OnDisable()
 {
 }
 
@@ -37,7 +37,7 @@ void UI_Window::SetActive(const bool argActive)
 	active = argActive;
 
 	if (active)
-		OnEnabled();
+		OnEnable();
 	else
-		OnDisabled();
+		OnDisable();
 }
