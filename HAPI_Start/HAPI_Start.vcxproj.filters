@@ -423,7 +423,4 @@
       <Filter>Header Files\World\Entities\Controllers\Normal</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
 </Project>

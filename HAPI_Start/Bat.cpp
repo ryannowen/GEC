@@ -69,6 +69,8 @@ void Bat::Update()
 	}
 	else if (isPossessed && !isCharging && canAttack) /// Moves in player direction
 	{
+		const HAPI_TKeyboardData& keyboardData{ HAPI.GetKeyboardData() };
+
 		ApplyPhysics(entityController->GetMovementDirection(playerID));
 	}
 	else if (!isCharging && canAttack)  /// AI move to player

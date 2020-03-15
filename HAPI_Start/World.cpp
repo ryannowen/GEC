@@ -281,24 +281,21 @@ bool World::SpawnEntity(const ESpawnableEntities argEntity, const Vector2<float>
 	return false;
 }
 
-
 void World::SpawnMiniBoss()
 {
 	std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
 
 	size_t boss{ bossIndex + rand() % numOfBosses };
-	globalScene->entities[boss]->Init(Vector2<float>(736, 696), ESide::ePlayerBoss, Vector2<float>(200, 200), 200, 5 + static_cast<int>(difficulty), 4 );
+	globalScene->entities[boss]->Init(Vector2<float>(736, 696), ESide::ePlayerBoss, Vector2<float>(300, 300), 200, 5 + static_cast<int>(difficulty), 4 );
 }
 
 void World::SpawnBoss()
 {
 	std::shared_ptr<Scene>& globalScene{ GetScene("Global") };
-
+	
 	size_t boss{ bossIndex + rand() % numOfBosses };
 	globalScene->entities[boss]->Init(Vector2<float>(736, 696), ESide::ePlayerBoss, Vector2<float>(500, 7500), 500, 10 + static_cast<int>(difficulty), 6);
 }
-
-
 
 void World::PlaceEntity(const ESpawnableEntities argEnemyType, const Vector2<float> argPosition)
 {

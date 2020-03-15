@@ -78,26 +78,29 @@ void Entity::Collided(Entity& argEntity)
 	/// This entity
 	if (!argEntity.passable)
 	{
-		if (currentPosition.y < argEntity.currentPosition.y)
-		{
-			isGrounded = true;
-		}
-		else
-		{
-			argEntity.isGrounded = true;
-		}
-
+		/// Y Axis
 		if (static_cast<int>(currentPosition.y) != static_cast<int>(oldPosition.y))
 		{
+			if (currentPosition.y + collisionBounds.Height() < argEntity.currentPosition.y + argEntity.collisionBounds.Height())
+			{
+				isGrounded = true;
+			}
+
 			currentPosition.y = oldPosition.y;
 
+			
 			velocity = Vector2<float>(velocity.x, 0);
 		}
-		else if (static_cast<int>(currentPosition.x) != static_cast<int>(oldPosition.x))
-		{
-			currentPosition.x = oldPosition.x;
 
-			velocity = Vector2<float>(0, velocity.y);
+		/// Check X Axis Again
+		if (CheckCollision(argEntity))
+		{
+			if (static_cast<int>(currentPosition.x) != static_cast<int>(oldPosition.x))
+			{
+				currentPosition.x = oldPosition.x;
+
+				velocity = Vector2<float>(0, velocity.y);
+			}
 		}
 	}
 	
